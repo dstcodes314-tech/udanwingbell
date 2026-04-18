@@ -1,5 +1,5 @@
-const ADMINS = [
-  { id: "YourUsername", password: "YourNewPassword" },
-  { id: "admin2", password: "securepass" },
-  { id: "admin3", password: "adminpass" }
-];
+[
+    {"id": "Vipin", "password": "355532788"},
+    {"id": "admin2", "password": "securepass"},
+    {"id": "admin3", "password": "adminpass"}
+]
