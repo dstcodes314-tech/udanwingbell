@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Udan Wing - Smart Bell Scheduler</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Sora:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#06090E;--bg2:#0C1018;--card:#111822;--card2:#161E29;--card3:#1A2332;
+      --border:#1B2536;--border2:#263345;--border3:#304050;
+      --fg:#EAF0F6;--fg2:#B8C5D4;--muted:#556880;
+      --accent:#E89040;--accent2:#F0A050;--accent3:#D07830;
+      --accent-dim:rgba(232,144,64,.08);--accent-mid:rgba(232,144,64,.18);--accent-glow:rgba(232,144,64,.25);
+      --teal:#22D3B7;--teal-dim:rgba(34,211,183,.08);--teal-mid:rgba(34,211,183,.18);
+      --red:#F06060;--red-dim:rgba(240,96,96,.08);--red-mid:rgba(240,96,96,.18);
+      --green:#40D89A;--green-dim:rgba(64,216,154,.08);--green-mid:rgba(64,216,154,.18);
+      --violet:#9070F0;--violet-dim:rgba(144,112,240,.08);--violet-mid:rgba(144,112,240,.18);
+      --amber:#F0C040;--amber-dim:rgba(240,192,64,.08);
+      --r:14px;--r-lg:20px;--r-xl:24px;
+      --shadow:0 4px 24px rgba(0,0,0,.35);
+      --glass:rgba(17,24,34,.75);
+    }
+    body.light{
+      --bg:#F0F2F6;--bg2:#E4E8EE;--card:#FFFFFF;--card2:#F6F8FA;--card3:#EDF0F4;
+      --border:#D8DEE6;--border2:#C4CCD6;--border3:#A8B4C0;
+      --fg:#0F1620;--fg2:#3A4A5C;--muted:#708090;
+      --accent-dim:rgba(232,144,64,.06);--accent-mid:rgba(232,144,64,.12);--accent-glow:rgba(232,144,64,.12);
+      --teal-dim:rgba(34,211,183,.06);--teal-mid:rgba(34,211,183,.12);
+      --red-dim:rgba(240,96,96,.06);--red-mid:rgba(240,96,96,.12);
+      --green-dim:rgba(64,216,154,.06);--green-mid:rgba(64,216,154,.12);
+      --violet-dim:rgba(144,112,240,.06);--violet-mid:rgba(144,112,240,.12);
+      --amber-dim:rgba(240,192,64,.06);
+      --shadow:0 4px 24px rgba(0,0,0,.08);
+      --glass:rgba(255,255,255,.8);
+    }
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;transition:background .5s,color .5s}
+    ::selection{background:var(--accent);color:#000}
+    input,button,select,textarea{font-family:inherit}
+
+    /* Scrollbar */
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+    /* === BACKGROUND === */
+    .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .bg-layer canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%}
+    .bg-orbs{position:absolute;inset:0}
+    .bg-orbs .o{position:absolute;border-radius:50%;filter:blur(120px);opacity:.2;animation:orbF 24s ease-in-out infinite alternate}
+    .bg-orbs .o:nth-child(1){width:550px;height:550px;background:radial-gradient(circle,#E89040,transparent 70%);top:-12%;right:-10%;animation-duration:28s}
+    .bg-orbs .o:nth-child(2){width:420px;height:420px;background:radial-gradient(circle,#B05020,transparent 70%);bottom:-8%;left:-6%;animation-duration:22s;animation-delay:-6s}
+    .bg-orbs .o:nth-child(3){width:300px;height:300px;background:radial-gradient(circle,#22D3B7,transparent 70%);top:45%;left:30%;opacity:.07;animation-duration:30s;animation-delay:-12s}
+    .bg-orbs .o:nth-child(4){width:200px;height:200px;background:radial-gradient(circle,#9070F0,transparent 70%);top:10%;left:60%;opacity:.06;animation-duration:26s;animation-delay:-8s}
+    body.light .bg-orbs .o{opacity:.06;filter:blur(160px)}
+    @keyframes orbF{0%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-15px) scale(1.04)}66%{transform:translate(-15px,20px) scale(.97)}100%{transform:translate(10px,-8px) scale(1.02)}}
+
+    /* Particles */
+    .particles{position:absolute;inset:0}
+    .particle{position:absolute;width:1.5px;height:1.5px;background:var(--accent);border-radius:50%;opacity:0;animation:pFade linear infinite}
+    @keyframes pFade{0%{opacity:0;transform:translateY(0) scale(.5)}15%{opacity:.5;transform:scale(1)}85%{opacity:.4}100%{opacity:0;transform:translateY(-100vh) scale(.3)}}
+
+    /* Noise overlay */
+    .noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    body.light .noise{opacity:.012}
+
+    /* === WRAPPER === */
+    .wrap{position:relative;z-index:1;width:100%;max-width:1120px;margin:0 auto;padding:0 clamp(1rem,3.5vw,2rem)}
+
+    /* === HEADER === */
+    header{background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);padding:.65rem 0;position:sticky;top:0;z-index:100;transition:background .5s}
+    .hdr{display:flex;justify-content:space-between;align-items:center}
+    .logo{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);letter-spacing:-.2px}
+    .logo .l-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent3));display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px var(--accent-glow)}
+    .logo .l-icon i{color:#fff;font-size:.85rem;animation:bSwing 3.5s ease-in-out infinite;transform-origin:top center}
+    @keyframes bSwing{0%,100%{transform:rotate(0)}12%{transform:rotate(12deg)}24%{transform:rotate(-10deg)}36%{transform:rotate(6deg)}48%{transform:rotate(-3deg)}60%,100%{transform:rotate(0)}}
+    .hdr-r{display:flex;align-items:center;gap:8px}
+    .clock{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:600;letter-spacing:.3px;display:flex;align-items:baseline;gap:0;background:var(--card);border:1px solid var(--border);padding:5px 12px;border-radius:10px}
+    .clock .c{animation:blk 1s step-end infinite;color:var(--accent)}
+    .clock .s{font-weight:300;font-size:.75rem;color:var(--muted);margin-left:1px}
+    @keyframes blk{50%{opacity:.12}}
+    .dst-badge{font-size:.55rem;font-weight:700;padding:2px 6px;border-radius:5px;background:var(--violet-dim);color:var(--violet);text-transform:uppercase;letter-spacing:.5px;display:none}
+    .dst-badge.on{display:inline-block}
+    .online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green-mid);animation:pulse 2s ease-in-out infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+    .hdr-sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
+    .hdr-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.88rem;transition:all .25s;flex-shrink:0}
+    .hdr-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px var(--accent-dim)}
+    .logout-btn{padding:6px 12px;border-radius:9px;border:1px solid var(--red-dim);background:var(--red-dim);color:var(--red);cursor:pointer;font-size:.73rem;font-weight:600;display:none;align-items:center;gap:5px;transition:all .25s;flex-shrink:0}
+    .logout-btn:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-1px)}
+    .logout-btn.vis{display:inline-flex}
+
+    /* === LOGIN === */
+    .login-page{flex:1;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);padding:2rem 1rem}
+    .login-card{width:100%;max-width:430px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2.8rem 2.4rem 2.4rem;position:relative;overflow:hidden;animation:cUp .65s cubic-bezier(.16,1,.3,1);box-shadow:var(--shadow)}
+    .login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--violet),var(--accent));background-size:200% 100%;animation:gradShift 4s linear infinite}
+    @keyframes gradShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+    .login-card::after{content:'';position:absolute;top:-60%;right:-40%;width:200%;height:200%;background:radial-gradient(circle at 75% 25%,var(--accent-dim),transparent 45%);pointer-events:none}
+    @keyframes cUp{from{opacity:0;transform:translateY(32px) scale(.96)}to{opacity:1;transform:none}}
+    .lb{text-align:center;margin-bottom:2.2rem;position:relative}
+    .lb .ic{width:72px;height:72px;border-radius:22px;margin:0 auto 16px;background:linear-gradient(145deg,var(--accent-dim),var(--accent-mid));display:flex;align-items:center;justify-content:center;position:relative;border:1px solid rgba(232,144,64,.12)}
+    .lb .ic i{font-size:28px;color:var(--accent)}
+    .lb .ic::after{content:'';position:absolute;inset:-8px;border-radius:28px;border:1.5px solid var(--accent-glow);animation:icR 3.5s ease-in-out infinite}
+    @keyframes icR{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.15);opacity:0}}
+    .lb h1{font-family:'Sora',sans-serif;font-size:1.65rem;font-weight:800;letter-spacing:-.3px}
+    .lb p{color:var(--muted);font-size:.85rem;margin-top:5px}
+    .fld{margin-bottom:1.2rem;position:relative}
+    .fld label{display:block;font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:7px}
+    .fld input{width:100%;padding:13px 14px 13px 46px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--fg);font-size:.95rem;outline:none;transition:all .3s}
+    .fld input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-dim)}
+    .fld input::placeholder{color:var(--muted);opacity:.6}
+    .fld .fi{position:absolute;left:15px;bottom:14px;color:var(--muted);font-size:.88rem;transition:color .3s}
+    .fld input:focus~.fi{color:var(--accent)}
+    .btn-p{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#E89040 0%,#C07028 100%);color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px var(--accent-glow);position:relative;overflow:hidden;margin-top:.4rem}
+    .btn-p::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:translateX(-100%);transition:transform .55s}
+    .btn-p:hover::before{transform:translateX(100%)}
+    .btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--accent-glow)}
+    .btn-p:active{transform:translateY(0);box-shadow:0 2px 10px var(--accent-glow)}
+    .btn-p:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+    .spin-s{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}
+    @keyframes sp{to{transform:rotate(360deg)}}
+    .login-hint{text-align:center;margin-top:1.2rem;font-size:.73rem;color:var(--muted);opacity:.7}
+    .shake{animation:shk .45s ease}
+    @keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+    /* === DASHBOARD === */
+    .dash{display:none;flex:1;padding:1.2rem 0 2rem;animation:dFu .55s ease}
+    .dash.vis{display:block}
+    @keyframes dFu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+    /* Welcome */
+    .welcome{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem 1.8rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+    .welcome::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent),var(--teal),var(--violet))}
+    .welcome::after{content:'';position:absolute;top:-50%;right:-15%;width:350px;height:350px;background:radial-gradient(circle,var(--accent-dim),transparent 55%);pointer-events:none}
+    .w-ic{width:50px;height:50px;border-radius:14px;background:linear-gradient(145deg,var(--accent-dim),var(--accent-mid));display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(232,144,64,.1)}
+    .w-ic i{font-size:1.2rem;color:var(--accent)}
+    .w-info{flex:1;position:relative;min-width:0}
+    .w-info h2{font-family:'Sora',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .w-info p{color:var(--muted);font-size:.82rem;margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .w-info .w-date{color:var(--accent);font-weight:600}
+    .w-right{text-align:right;position:relative;flex-shrink:0}
+    .w-right .w-countdown{font-family:'Sora',sans-serif;font-size:1.7rem;font-weight:800;color:var(--accent);letter-spacing:-.5px;line-height:1.1}
+    .w-right .w-next{font-size:.7rem;color:var(--muted);margin-top:3px;font-weight:500}
+    .w-right .w-next-time{font-size:.82rem;color:var(--fg2);font-weight:600;margin-top:1px}
+
+    /* Stats */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.2rem}
+    .st{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;transition:all .35s;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+    .st:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+    .st .si{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-bottom:10px;position:relative}
+    .st:nth-child(1) .si{background:linear-gradient(135deg,var(--accent-dim),var(--accent-mid));color:var(--accent)}
+    .st:nth-child(2) .si{background:linear-gradient(135deg,var(--teal-dim),var(--teal-mid));color:var(--teal)}
+    .st:nth-child(3) .si{background:linear-gradient(135deg,var(--green-dim),var(--green-mid));color:var(--green)}
+    .st:nth-child(4) .si{background:linear-gradient(135deg,var(--violet-dim),var(--violet-mid));color:var(--violet)}
+    .st .sv{font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;line-height:1}
+    .st:nth-child(1) .sv{color:var(--accent)}.st:nth-child(2) .sv{color:var(--teal)}.st:nth-child(3) .sv{color:var(--green)}.st:nth-child(4) .sv{color:var(--violet)}
+    .st .sl{font-size:.7rem;color:var(--muted);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+    .st .st-bg{position:absolute;bottom:-10px;right:-10px;font-size:4rem;opacity:.03;pointer-events:none}
+
+    /* Main Grid */
+    .main-grid{display:grid;grid-template-columns:1fr 290px;gap:14px;align-items:start}
+
+    /* Schedule Panel */
+    .sched-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow)}
+    .sched-top{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;border-bottom:1px solid var(--border);background:var(--card2)}
+    .sched-top h3{font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:8px}
+    .sched-top h3 i{color:var(--accent);font-size:.8rem}
+    .sched-cnt{background:var(--accent-dim);color:var(--accent);font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(232,144,64,.1)}
+
+    /* Day Tabs */
+    .day-tabs{display:flex;gap:3px;padding:8px 1rem;border-bottom:1px solid var(--border);overflow-x:auto}
+    .day-tabs::-webkit-scrollbar{height:0}
+    .dt{flex:1;min-width:0;padding:8px 2px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-size:.7rem;font-weight:600;cursor:pointer;transition:all .25s;text-align:center;white-space:nowrap;position:relative}
+    .dt:hover{color:var(--fg);background:var(--card2)}
+    .dt.on{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#0A0D12;font-weight:700;box-shadow:0 3px 14px var(--accent-glow)}
+    .dt .td{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-left:2px;vertical-align:middle;box-shadow:0 0 6px var(--accent-glow)}
+    .dt.on .td{background:#0A0D12;box-shadow:none}
+
+    /* Bell List */
+    .bl{padding:10px 1rem 1rem;max-height:480px;overflow-y:auto}
+    .add-c{background:var(--card2);border:2px dashed var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-weight:600;font-size:.84rem;transition:all .3s}
+    .add-c:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);transform:translateY(-1px);box-shadow:0 4px 16px var(--accent-dim)}
+    .bi{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:11px;transition:all .3s;animation:si .35s cubic-bezier(.16,1,.3,1) both;margin-bottom:6px;position:relative;overflow:hidden}
+    .bi::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--accent-dim),transparent);opacity:0;transition:opacity .3s}
+    .bi:hover{border-color:var(--border2);transform:translateX(2px)}
+    .bi:hover::before{opacity:1}
+    .bi.ringing{border-color:var(--accent);animation:si .35s cubic-bezier(.16,1,.3,1) both,ringPulse 1s ease-in-out infinite}
+    @keyframes si{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @keyframes ringPulse{0%,100%{box-shadow:0 0 0 0 var(--accent-glow)}50%{box-shadow:0 0 0 8px transparent}}
+    .bi-n{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent-dim),var(--accent-mid));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.73rem;color:var(--accent);flex-shrink:0;position:relative;z-index:1}
+    .bi-t{font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;min-width:95px;position:relative;z-index:1}
+    .bi-d{font-size:.75rem;color:var(--muted);flex:1;position:relative;z-index:1}
+    .bi-d strong{color:var(--fg2);font-weight:600}
+    .bi-s{font-size:.58rem;padding:3px 8px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;position:relative;z-index:1}
+    .bi-s.up{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(232,144,64,.1)}
+    .bi-s.now{background:var(--accent);color:#0A0D12;animation:sP .8s ease infinite alternate;border:none}
+    @keyframes sP{from{box-shadow:0 0 0 0 var(--accent-glow)}to{box-shadow:0 0 0 8px transparent}}
+    .bi-s.ps{background:rgba(255,255,255,.02);color:var(--muted)}
+    .bi-s.sc{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(34,211,183,.08)}
+    .bi-a{display:flex;gap:3px;flex-shrink:0;position:relative;z-index:1}
+    .bi-b{width:28px;height:28px;border:none;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.7rem;background:transparent}
+    .bi-b.pv{color:var(--muted)}.bi-b.pv:hover{background:var(--accent-dim);color:var(--accent)}
+    .bi-b.ed{color:var(--muted)}.bi-b.ed:hover{background:var(--teal-dim);color:var(--teal)}
+    .bi-b.dl{color:var(--muted)}.bi-b.dl:hover{background:var(--red-dim);color:var(--red)}
+    .empty{text-align:center;padding:36px 20px;color:var(--muted)}
+    .empty i{font-size:36px;opacity:.15;margin-bottom:10px;display:block}
+    .empty p{font-size:.83rem}
+
+    /* Timeline */
+    .tl-section{padding:0 1rem 1rem}
+    .tl-label{font-size:.65rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:8px}
+    .tl-bar{position:relative;height:38px;background:rgba(255,255,255,.015);border-radius:10px;border:1px solid var(--border);overflow:hidden}
+    body.light .tl-bar{background:rgba(0,0,0,.015)}
+    .tl-prog{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--accent-dim),var(--accent-mid));border-radius:10px;transition:width 1s linear}
+    .tl-mk{position:absolute;top:4px;bottom:4px;width:2px;background:var(--accent);border-radius:2px;transition:left 1s linear;z-index:2}
+    .tl-mk::before{content:'';position:absolute;top:-4px;left:-4px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent-glow),0 0 20px var(--accent-dim)}
+    .tl-dots{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%)}
+    .tl-d{position:absolute;top:0;width:7px;height:7px;background:var(--accent);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 6px var(--accent-glow);transition:all .3s}
+    .tl-d.ps{background:var(--muted);box-shadow:none;opacity:.25}
+    .tl-lbls{position:absolute;inset:0;display:flex;align-items:flex-end;padding:0 8px;justify-content:space-between;pointer-events:none}
+    .tl-lbls span{font-size:.48rem;color:var(--muted);opacity:.3}
+
+    /* Sidebar */
+    .sidebar{display:flex;flex-direction:column;gap:12px}
+    .side-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.1rem 1.2rem;transition:all .35s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .side-card:hover{border-color:var(--border2);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+    .side-card h4{font-size:.68rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+    .side-card h4 i{font-size:.72rem}
+
+    /* Quick Actions */
+    .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .qa-btn{padding:11px 6px;border:1px solid var(--border);border-radius:10px;background:var(--card2);color:var(--fg2);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:.68rem;font-weight:600;transition:all .3s}
+    .qa-btn i{font-size:.95rem;transition:transform .3s}
+    .qa-btn:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+    .qa-btn:hover i{transform:scale(1.15)}
+    .qa-btn:nth-child(1):hover{border-color:var(--accent);color:var(--accent)}
+    .qa-btn:nth-child(1) i{color:var(--accent)}
+    .qa-btn:nth-child(2):hover{border-color:var(--teal);color:var(--teal)}
+    .qa-btn:nth-child(2) i{color:var(--teal)}
+    .qa-btn:nth-child(3):hover{border-color:var(--green);color:var(--green)}
+    .qa-btn:nth-child(3) i{color:var(--green)}
+    .qa-btn:nth-child(4):hover{border-color:var(--violet);color:var(--violet)}
+    .qa-btn:nth-child(4) i{color:var(--violet)}
+
+    /* Sound Visualizer */
+    .viz-canvas{width:100%;height:64px;display:block;border-radius:10px;margin-bottom:4px}
+    .viz-label{text-align:center;font-size:.65rem;color:var(--muted)}
+
+    /* Activity Log */
+    .log-list{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:0}
+    .log-item{display:flex;align-items:flex-start;gap:8px;font-size:.75rem;padding:7px 0;border-bottom:1px solid var(--border);animation:si .3s ease both}
+    .log-item:last-child{border-bottom:none}
+    .log-dot{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0}
+    .log-dot.add{background:var(--green);box-shadow:0 0 6px var(--green-mid)}
+    .log-dot.edit{background:var(--accent);box-shadow:0 0 6px var(--accent-mid)}
+    .log-dot.del{background:var(--red);box-shadow:0 0 6px var(--red-mid)}
+    .log-dot.ring{background:var(--violet);box-shadow:0 0 6px var(--violet-mid)}
+    .log-text{color:var(--fg2);line-height:1.3}
+    .log-time{color:var(--muted);font-size:.64rem;margin-top:1px}
+
+    /* === MODAL === */
+    .modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem}
+    .modal-bg.open{display:flex;animation:mFi .2s ease}
+    @keyframes mFi{from{opacity:0}to{opacity:1}}
+    .modal-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;width:100%;max-width:430px;animation:mP .35s cubic-bezier(.16,1,.3,1);position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    @keyframes mP{from{opacity:0;transform:scale(.9) translateY(16px)}to{opacity:1;transform:none}}
+    .modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--violet));border-radius:var(--r-xl) var(--r-xl) 0 0}
+    .mt{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+    .mt h2{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:700}
+    .mx{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .25s}
+    .mx:hover{color:var(--red);border-color:var(--red);transform:rotate(90deg)}
+    .mf{margin-bottom:1.1rem}
+    .mf label{display:block;font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+    .mf input[type="time"],.mf input[type="number"],.mf select{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--fg);font-size:.95rem;outline:none;transition:all .3s}
+    .mf input:focus,.mf select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-dim)}
+    .mf select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23556880' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+    .sl-w{margin-bottom:1.3rem}
+    .sl-v{text-align:center;font-size:.85rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+    input[type="range"]{width:100%;height:6px;border-radius:3px;outline:none;-webkit-appearance:none;background:linear-gradient(90deg,var(--accent-dim),var(--accent-mid));cursor:pointer}
+    input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent3));cursor:pointer;box-shadow:0 2px 10px var(--accent-glow);border:2px solid rgba(255,255,255,.15);transition:transform .2s}
+    input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.18)}
+    .mb{display:flex;gap:8px;margin-top:.6rem}
+    .mbtn{flex:1;padding:12px;border:none;border-radius:12px;font-size:.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .3s}
+    .mbtn-c{background:var(--card2);color:var(--muted);border:1px solid var(--border)}
+    .mbtn-c:hover{color:var(--fg);border-color:var(--muted);transform:translateY(-1px)}
+    .mbtn-d{background:var(--red-dim);color:var(--red);border:1px solid rgba(240,96,96,.1)}
+    .mbtn-d:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-1px)}
+    .mbtn-s{background:linear-gradient(135deg,#E89040,#C07028);color:#fff;box-shadow:0 4px 16px var(--accent-glow);flex:2}
+    .mbtn-s:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--accent-glow)}
+
+    /* === CONFIRM === */
+    .cfm-bg{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem}
+    .cfm-bg.open{display:flex;animation:mFi .2s ease}
+    .cfm-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;width:100%;max-width:360px;text-align:center;animation:mP .35s cubic-bezier(.16,1,.3,1);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    .cfm-box .ci{width:56px;height:56px;border-radius:50%;background:var(--red-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:1px solid rgba(240,96,96,.12)}
+    .cfm-box .ci i{font-size:1.4rem;color:var(--red)}
+    .cfm-box p{font-size:.9rem;color:var(--fg);margin-bottom:1.4rem;line-height:1.5}
+    .cfm-btns{display:flex;gap:8px}
+    .cfm-btns button{flex:1;padding:11px;border:none;border-radius:12px;font-size:.86rem;font-weight:700;cursor:pointer;transition:all .3s}
+    .cb-n{background:var(--card2);color:var(--muted);border:1px solid var(--border)}
+    .cb-n:hover{color:var(--fg);transform:translateY(-1px)}
+    .cb-y{background:var(--red);color:#fff;box-shadow:0 4px 14px var(--red-mid)}
+    .cb-y:hover{opacity:.85;transform:translateY(-1px)}
+
+    /* === TOAST === */
+    .tw{position:fixed;top:70px;right:14px;z-index:700;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+    .ts{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:10px;min-width:250px;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:tI .35s cubic-bezier(.16,1,.3,1);backdrop-filter:blur(12px);pointer-events:auto}
+    .ts.out{animation:tO .25s ease forwards}
+    .ts i{font-size:1rem;flex-shrink:0}
+    .ts.ok i{color:var(--green)}.ts.er i{color:var(--red)}.ts.in i{color:var(--accent)}
+    .ts span{font-size:.82rem;color:var(--fg);line-height:1.3}
+    @keyframes tI{from{opacity:0;transform:translateX(30px) scale(.92)}to{opacity:1;transform:none}}
+    @keyframes tO{to{opacity:0;transform:translateX(30px) scale(.92)}}
+
+    /* Ring FX */
+    .ring-fx{position:fixed;inset:0;z-index:400;pointer-events:none;background:radial-gradient(ellipse at center,var(--accent-glow) 0%,transparent 55%);opacity:0;transition:opacity .15s}
+    .ring-fx.on{animation:rP .7s ease-in-out infinite alternate}
+    @keyframes rP{from{opacity:.15}to{opacity:.5}}
+
+    /* Footer */
+    footer{background:var(--card);border-top:1px solid var(--border);padding:.9rem 0;margin-top:auto;transition:background .5s}
+    .ft{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--muted);flex-wrap:wrap;gap:6px}
+    .ft-l{display:flex;align-items:center;gap:6px}
+    .ft-l i{color:var(--accent)}
+    .ft-r{color:var(--fg2);font-weight:600;display:flex;align-items:center;gap:5px}
+    .ft-r .heart{color:var(--red);animation:heartBeat 1.5s ease-in-out infinite}
+    @keyframes heartBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}45%{transform:scale(1.15)}60%{transform:scale(1)}}
+
+    /* Responsive */
+    @media(max-width:920px){.main-grid{grid-template-columns:1fr}.sidebar{flex-direction:row;flex-wrap:wrap}.sidebar .side-card{flex:1;min-width:220px}}
+    @media(max-width:640px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .welcome{flex-direction:column;text-align:center;padding:1.2rem;gap:12px}
+      .w-right{text-align:center}
+      .w-info p{justify-content:center}
+      .bi-t{font-size:.88rem;min-width:78px}.bi-d{display:none}
+      .sidebar{flex-direction:column}.sidebar .side-card{min-width:100%}
+      .ft{flex-direction:column;text-align:center}
+      .clock{font-size:.92rem;padding:4px 8px}
+      .login-card{padding:2rem 1.5rem 1.8rem}
+    }
+    @media(max-width:400px){.stats{gap:6px}.st{padding:.8rem}.st .sv{font-size:1.2rem}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <canvas id="bgCanvas"></canvas>
+  <div class="bg-orbs"><div class="o"></div><div class="o"></div><div class="o"></div><div class="o"></div></div>
+  <div class="particles" id="particles"></div>
+</div>
+<div class="noise"></div>
+<div class="ring-fx" id="ringFx"></div>
+<div class="tw" id="toastWrap"></div>
+
+<!-- Confirm Dialog -->
+<div class="cfm-bg" id="cfmBg">
+  <div class="cfm-box">
+    <div class="ci"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <p id="cfmMsg">Are you sure?</p>
+    <div class="cfm-btns">
+      <button class="cb-n" id="cfmNo">Cancel</button>
+      <button class="cb-y" id="cfmYes">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bell Modal -->
+<div class="modal-bg" id="bellModal">
+  <div class="modal-box">
+    <div class="mt"><h2 id="mTitle">Add Bell</h2><button class="mx" id="mClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+    <form id="bellForm" autocomplete="off">
+      <div class="mf">
+        <label for="mTime">Bell Time</label>
+        <input type="time" id="mTime" required>
+      </div>
+      <div class="mf">
+        <label for="mLabel">Label (optional)</label>
+        <input type="text" id="mLabel" placeholder="e.g. Period 1 Start" maxlength="30">
+      </div>
+      <div class="sl-w">
+        <div class="sl-v">Duration: <span id="slVal">3</span> seconds</div>
+        <input type="range" id="mSlider" min="1" max="60" value="3">
+      </div>
+      <div class="mf">
+        <label for="mDur">Duration (seconds)</label>
+        <input type="number" id="mDur" min="1" max="60" value="3" required>
+      </div>
+      <input type="hidden" id="mDay"><input type="hidden" id="mSlot"><input type="hidden" id="mEdit" value="0">
+      <div class="mb">
+        <button type="button" class="mbtn mbtn-c" id="mCancel">Cancel</button>
+        <button type="button" class="mbtn mbtn-d" id="mDisable" style="display:none"><i class="fa-solid fa-ban"></i> Disable</button>
+        <button type="submit" class="mbtn mbtn-s"><i class="fa-solid fa-check"></i> Save Bell</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="wrap hdr">
+    <div class="logo">
+      <div class="l-icon"><i class="fa-solid fa-bell"></i></div>
+      <span>Udan Wing</span>
+    </div>
+    <div class="hdr-r">
+      <div class="online-dot" title="Connected"></div>
+      <div class="clock" id="clock" aria-label="Current time">--<span class="c">:</span>--<span class="c">:</span><span class="s">--</span></div>
+      <span class="dst-badge" id="dstBadge">DST</span>
+      <div class="hdr-sep"></div>
+      <button class="hdr-btn" id="themeBtn" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+      <button class="logout-btn" id="logoutBtn" aria-label="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+    </div>
+  </div>
+</header>
+
+<!-- Login Page -->
+<main class="login-page" id="loginPage">
+  <div class="login-card" id="loginCard">
+    <div class="lb">
+      <div class="ic"><i class="fa-solid fa-bell"></i></div>
+      <h1>Udan Wing</h1>
+      <p>Smart Bell Scheduler Dashboard</p>
+    </div>
+    <form id="loginForm" autocomplete="off">
+      <div class="fld">
+        <label for="uN">Username</label>
+        <input type="text" id="uN" placeholder="Enter username" required>
+        <i class="fa-solid fa-user fi"></i>
+      </div>
+      <div class="fld">
+        <label for="uP">Password</label>
+        <input type="password" id="uP" placeholder="Enter password" required>
+        <i class="fa-solid fa-lock fi"></i>
+      </div>
+      <button type="submit" class="btn-p" id="loginBtn">
+        <span id="lTxt">Sign In</span>
+        <span id="lSpin" class="spin-s" style="display:none"></span>
+      </button>
+    </form>
+    <p class="login-hint">Secure admin access only</p>
+  </div>
+</main>
+
+<!-- Dashboard -->
+<main class="dash" id="dashPage">
+  <div class="wrap">
+    <!-- Welcome Banner -->
+    <div class="welcome">
+      <div class="w-ic"><i class="fa-solid fa-hand-sparkles"></i></div>
+      <div class="w-info">
+        <h2 id="wGreet">Good Morning, Admin</h2>
+        <p><span class="w-date" id="wDate"></span> <i class="fa-solid fa-circle" style="font-size:3px;vertical-align:middle;color:var(--border)"></i> <span id="wDayLabel">Monday</span></p>
+      </div>
+      <div class="w-right">
+        <div class="w-countdown" id="wCountdown">--:--</div>
+        <div class="w-next" id="wNext">Next Bell</div>
+        <div class="w-next-time" id="wNextTime"></div>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats">
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-bell"></i></div>
+        <div class="sv" id="sTotal">0</div>
+        <div class="sl">Total Active</div>
+        <div class="st-bg"><i class="fa-solid fa-bell"></i></div>
+      </div>
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-calendar-day"></i></div>
+        <div class="sv" id="sToday">0</div>
+        <div class="sl">Today's Bells</div>
+        <div class="st-bg"><i class="fa-solid fa-calendar-day"></i></div>
+      </div>
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="sv" id="sPassed">0</div>
+        <div class="sl">Passed Today</div>
+        <div class="st-bg"><i class="fa-solid fa-circle-check"></i></div>
+      </div>
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="sv" id="sSlots">0/15</div>
+        <div class="sl">Slots Used</div>
+        <div class="st-bg"><i class="fa-solid fa-layer-group"></i></div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="main-grid">
+      <!-- Schedule Panel -->
+      <div class="sched-panel">
+        <div class="sched-top">
+          <h3><i class="fa-solid fa-list-check"></i> Bell Schedule</h3>
+          <span class="sched-cnt" id="bellCnt">0</span>
+        </div>
+        <div class="day-tabs" id="dayTabs"></div>
+        <div class="bl" id="bellList"></div>
+        <div class="tl-section" id="tlSection" style="display:none">
+          <div class="tl-label">Day Timeline</div>
+          <div class="tl-bar">
+            <div class="tl-prog" id="tlProg"></div>
+            <div class="tl-mk" id="tlMk"></div>
+            <div class="tl-dots" id="tlDots"></div>
+            <div class="tl-lbls"><span>12AM</span><span>6AM</span><span>12PM</span><span>6PM</span><span>12AM</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="side-card">
+          <h4><i class="fa-solid fa-bolt"></i> Quick Actions</h4>
+          <div class="qa-grid">
+            <button class="qa-btn" id="qaAdd"><i class="fa-solid fa-plus"></i>Add Bell</button>
+            <button class="qa-btn" id="qaTest"><i class="fa-solid fa-volume-high"></i>Test Sound</button>
+            <button class="qa-btn" id="qaToday"><i class="fa-solid fa-calendar"></i>Go Today</button>
+            <button class="qa-btn" id="qaCopy"><i class="fa-solid fa-clone"></i>Copy Day</button>
+          </div>
+        </div>
+        <div class="side-card">
+          <h4><i class="fa-solid fa-wave-square"></i> Sound Wave</h4>
+          <canvas class="viz-canvas" id="vizCanvas"></canvas>
+          <div class="viz-label">Real-time bell waveform</div>
+        </div>
+        <div class="side-card">
+          <h4><i class="fa-solid fa-clock-rotate-left"></i> Activity Log</h4>
+          <div class="log-list" id="logList">
+            <div class="empty" style="padding:18px 0"><i class="fa-solid fa-inbox" style="font-size:22px"></i><p>No activity yet</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap ft">
+    <div class="ft-l"><i class="fa-solid fa-bolt"></i> Powered by Team Chronobotic</div>
+    <div class="ft-r">Created by DST <i class="fa-solid fa-heart heart"></i></div>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+<script>
+/* ================================================================
+   CONFIGURATION
+   ================================================================ */
+const FB_CONFIG = {
+  apiKey: "AIzaSyBxaUJSBbPtxijpjyNJBK4dxK4tdZzKuyw",
+  databaseURL: "https://bell-56bba-default-rtdb.asia-southeast1.firebasedatabase.app/"
+};
+
+const MAX_SLOTS = 15;
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const DAY_SHORT = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const ADMINS = [
+  { id: "Vipin", password: "355532788" },
+  { id: "admin2", password: "securepass" },
+  { id: "admin3", password: "adminpass" }
+];
+
+/* ================================================================
+   STATE
+   ================================================================ */
+let currentUser = null;
+let selectedDay = "";
+let schedule = {};
+let audioCtx = null;
+let rangSet = new Set();
+let confirmResolver = null;
+let activityLog = [];
+let vizAnimId = null;
+let bgAnimId = null;
+let isCurrentlyRinging = false;
+
+/* ================================================================
+   FIREBASE INIT
+   ================================================================ */
+firebase.initializeApp(FB_CONFIG);
+const db = firebase.database();
+
+/* ================================================================
+   DOM HELPERS
+   ================================================================ */
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+
+/* ================================================================
+   UTILITY FUNCTIONS
+   ================================================================ */
+function todayName() {
+  const d = new Date().getDay();
+  return DAYS[d === 0 ? 6 : d - 1];
+}
+
+function now24() {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function to12h(t) {
+  if (!t) return "";
+  const [h, m] = t.split(":").map(Number);
+  const ap = h >= 12 ? "PM" : "AM";
+  return `${String(h % 12 || 12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${ap}`;
+}
+
+function to24h(t) {
+  if (!t) return "";
+  const x = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!x) return t;
+  let h = +x[1];
+  if (x[3].toUpperCase() === "PM" && h !== 12) h += 12;
+  if (x[3].toUpperCase() === "AM" && h === 12) h = 0;
+  return `${String(h).padStart(2,'0')}:${x[2]}`;
+}
+
+function secUntil(t) {
+  const [h, m] = t.split(":").map(Number);
+  const now = new Date(), target = new Date(now);
+  target.setHours(h, m, 0, 0);
+  let diff = (target - now) / 1000;
+  return diff <= 0 ? diff + 86400 : diff;
+}
+
+function fmtCountdown(s) {
+  if (s < 0) s = 0;
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = Math.floor(s % 60);
+  const parts = [];
+  if (h > 0) parts.push(`${h}h`);
+  if (m > 0) parts.push(`${m}m`);
+  parts.push(`${sec}s`);
+  return parts.join(" ");
+}
+
+function getActiveBells(day) {
+  const d = schedule[day];
+  if (!d) return [];
+  const result = [];
+  for (let i = 1; i <= MAX_SLOTS; i++) {
+    const b = d[String(i)];
+    if (b && b.time && b.duration > 0) {
+      result.push({
+        slot: i,
+        time: b.time,
+        time24: to24h(b.time),
+        duration: b.duration,
+        label: b.label || ""
+      });
+    }
+  }
+  result.sort((a, b) => a.time24.localeCompare(b.time24));
+  return result;
+}
+
+function findEmptySlot(day) {
+  const d = schedule[day];
+  if (!d) return 1;
+  for (let i = 1; i <= MAX_SLOTS; i++) {
+    const b = d[String(i)];
+    if (!b || !b.time || b.duration <= 0) return i;
+  }
+  return -1;
+}
+
+function isDST() {
+  const d = new Date();
+  const jan = new Date(d.getFullYear(), 0, 1);
+  const jul = new Date(d.getFullYear(), 6, 1);
+  return d.getTimezoneOffset() < Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+}
+
+function getTZAbbr() {
+  try {
+    return Intl.DateTimeFormat('en', { timeZoneName: 'short' })
+      .formatToParts(new Date()).find(p => p.type === 'timeZoneName').value;
+  } catch { return ""; }
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ================================================================
+   BACKGROUND CANVAS (Animated Grid + Glow)
+   ================================================================ */
+function initBgCanvas() {
+  const canvas = $('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    w = rect.width; h = rect.height;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let time = 0;
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const isLight = document.body.classList.contains('light');
+    const gridColor = isLight ? 'rgba(0,0,0,0.025)' : 'rgba(255,255,255,0.015)';
+    const spacing = 60;
+    const offsetX = (time * 8) % spacing;
+    const offsetY = (time * 4) % spacing;
+
+    /* Draw grid lines */
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    for (let x = -spacing + offsetX; x < w + spacing; x += spacing) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+    }
+    for (let y = -spacing + offsetY; y < h + spacing; y += spacing) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+    }
+    ctx.stroke();
+
+    /* Draw subtle intersection dots */
+    ctx.fillStyle = isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.025)';
+    for (let x = -spacing + offsetX; x < w + spacing; x += spacing) {
+      for (let y = -spacing + offsetY; y < h + spacing; y += spacing) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    time += 0.003;
+    bgAnimId = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ================================================================
+   PARTICLES
+   ================================================================ */
+function initParticles() {
+  const container = $('particles');
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = '-5px';
+    p.style.animationDuration = (10 + Math.random() * 18) + 's';
+    p.style.animationDelay = Math.random() * 12 + 's';
+    const size = 1 + Math.random() * 2;
+    p.style.width = p.style.height = size + 'px';
+    container.appendChild(p);
+  }
+}
+
+/* ================================================================
+   TOAST NOTIFICATIONS
+   ================================================================ */
+function toast(msg, type = "in") {
+  const icons = { ok: "fa-circle-check", er: "fa-circle-xmark", in: "fa-circle-info" };
+  const el = document.createElement('div');
+  el.className = `ts ${type}`;
+  el.innerHTML = `<i class="fa-solid ${icons[type]}"></i><span>${escapeHtml(msg)}</span>`;
+  $('toastWrap').appendChild(el);
+  setTimeout(() => {
+    el.classList.add('out');
+    setTimeout(() => el.remove(), 280);
+  }, 2800);
+}
+
+/* ================================================================
+   ACTIVITY LOG
+   ================================================================ */
+function addLog(text, type = "edit") {
+  activityLog.unshift({ text, type, time: new Date() });
+  if (activityLog.length > 25) activityLog.pop();
+  renderLog();
+}
+
+function renderLog() {
+  const el = $('logList');
+  if (!activityLog.length) {
+    el.innerHTML = '<div class="empty" style="padding:18px 0"><i class="fa-solid fa-inbox" style="font-size:22px"></i><p>No activity yet</p></div>';
+    return;
+  }
+  el.innerHTML = activityLog.map(l => {
+    const t = l.time;
+    const ts = `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
+    return `<div class="log-item"><div class="log-dot ${l.type}"></div><div><div class="log-text">${escapeHtml(l.text)}</div><div class="log-time">${ts}</div></div></div>`;
+  }).join('');
+}
+
+/* ================================================================
+   CONFIRM DIALOG
+   ================================================================ */
+function showConfirm(msg) {
+  return new Promise(resolve => {
+    confirmResolver = resolve;
+    $('cfmMsg').textContent = msg;
+    $('cfmBg').classList.add('open');
+  });
+}
+
+function closeConfirm(value) {
+  $('cfmBg').classList.remove('open');
+  if (confirmResolver) { confirmResolver(value); confirmResolver = null; }
+}
+
+ $('cfmNo').onclick = () => closeConfirm(false);
+ $('cfmYes').onclick = () => closeConfirm(true);
+ $('cfmBg').onclick = e => { if (e.target === $('cfmBg')) closeConfirm(false); };
+
+/* ================================================================
+   AUDIO ENGINE (Multi-harmonic Bell)
+   ================================================================ */
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playBell(duration) {
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  const dur = Math.min(Math.max(duration, 0.5), 10);
+
+  /* Fundamental + harmonics for bell timbre */
+  const partials = [
+    { freq: 523.25, gain: 0.30, delay: 0 },
+    { freq: 1046.5, gain: 0.15, delay: 0.02 },
+    { freq: 1569.8, gain: 0.07, delay: 0.04 },
+    { freq: 2093,   gain: 0.035, delay: 0.06 },
+    { freq: 2637,   gain: 0.015, delay: 0.08 },
+    { freq: 3155.5, gain: 0.008, delay: 0.10 }
+  ];
+
+  partials.forEach(p => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = p.freq;
+
+    /* ADSR-like envelope */
+    const attackTime = 0.003;
+    const start = now + p.delay;
+    gain.gain.setValueAtTime(0, start);
+    gain.gain.linearRampToValueAtTime(p.gain, start + attackTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+
+    /* Vibrato for realism */
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 5.5;
+    lfoGain.gain.value = 3.5;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    lfo.start(start);
+    lfo.stop(start + dur + 0.1);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(start);
+    osc.stop(start + dur + 0.1);
+  });
+
+  /* Visual ring effect */
+  isCurrentlyRinging = true;
+  $('ringFx').classList.add('on');
+  setTimeout(() => {
+    $('ringFx').classList.remove('on');
+    isCurrentlyRinging = false;
+  }, dur * 1000);
+}
+
+/* ================================================================
+   WAVEFORM VISUALIZER
+   ================================================================ */
+function initViz() {
+  const canvas = $('vizCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  function draw() {
+    const w = canvas.width / dpr;
+    const h = canvas.height / dpr;
+    ctx.clearRect(0, 0, w, h);
+
+    const isLight = document.body.classList.contains('light');
+    const bgAlpha = isLight ? 0.02 : 0.015;
+    const centerAlpha = isLight ? 0.04 : 0.025;
+
+    /* Multiple layered waves */
+    const waves = [
+      { amp: h * 0.32, freq: 0.022, speed: 0.045, color: 'rgba(232,144,64,0.55)', lw: 2.2 },
+      { amp: h * 0.22, freq: 0.032, speed: 0.065, color: 'rgba(34,211,183,0.35)', lw: 1.6 },
+      { amp: h * 0.16, freq: 0.042, speed: 0.035, color: 'rgba(144,112,240,0.25)', lw: 1.2 },
+      { amp: h * 0.10, freq: 0.055, speed: 0.08,  color: 'rgba(240,192,64,0.18)', lw: 0.8 }
+    ];
+
+    waves.forEach(wv => {
+      ctx.beginPath();
+      ctx.strokeStyle = wv.color;
+      ctx.lineWidth = wv.lw;
+      for (let x = 0; x <= w; x++) {
+        const y = h / 2 +
+          Math.sin(x * wv.freq + t * wv.speed * 60) * wv.amp *
+          Math.sin(x * 0.006 + t * 0.015) *
+          (isCurrentlyRinging ? 1.5 : 0.7 + Math.sin(t * 2) * 0.3);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    });
+
+    /* Glow fill under primary wave */
+    ctx.beginPath();
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, 'rgba(232,144,64,0.06)');
+    grad.addColorStop(0.5, 'rgba(34,211,183,0.04)');
+    grad.addColorStop(1, 'rgba(144,112,240,0.06)');
+    ctx.fillStyle = grad;
+    for (let x = 0; x <= w; x++) {
+      const y = h / 2 + Math.sin(x * 0.022 + t * 0.045 * 60) * h * 0.32 * Math.sin(x * 0.006 + t * 0.015);
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, h);
+    ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fill();
+
+    /* Center line */
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(128,128,128,${centerAlpha})`;
+    ctx.lineWidth = 0.5;
+    ctx.moveTo(0, h / 2);
+    ctx.lineTo(w, h / 2);
+    ctx.stroke();
+
+    t += 0.016;
+    vizAnimId = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ================================================================
+   THEME TOGGLE
+   ================================================================ */
+function initTheme() {
+  if (localStorage.getItem('uw_light') === 'true') {
+    document.body.classList.add('light');
+    $('themeBtn').innerHTML = '<i class="fa-solid fa-sun"></i>';
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('uw_light', isLight);
+  $('themeBtn').innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+}
+
+/* ================================================================
+   CLOCK & GREETING
+   ================================================================ */
+function updateClock() {
+  const d = new Date();
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  const s = String(d.getSeconds()).padStart(2, '0');
+  $('clock').innerHTML = `${h}<span class="c">:</span>${m}<span class="c">:</span><span class="s">${s}</span>`;
+}
+
+function updateGreeting() {
+  const h = new Date().getHours();
+  let g = "Good Evening";
+  if (h < 12) g = "Good Morning";
+  else if (h < 17) g = "Good Afternoon";
+  $('wGreet').textContent = `${g}, ${currentUser || 'Admin'}`;
+
+  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  $('wDate').textContent = new Date().toLocaleDateString('en-US', opts);
+  $('wDayLabel').textContent = todayName();
+}
+
+function checkDST() {
+  if (isDST()) {
+    $('dstBadge').classList.add('on');
+    $('dstBadge').textContent = getTZAbbr();
+  } else {
+    $('dstBadge').classList.remove('on');
+  }
+}
+
+/* ================================================================
+   AUTHENTICATION
+   ================================================================ */
+function showLogin() {
+  $('loginPage').style.display = 'flex';
+  $('dashPage').classList.remove('vis');
+  $('logoutBtn').classList.remove('vis');
+  $('uN').value = '';
+  $('uP').value = '';
+}
+
+function showDashboard() {
+  $('loginPage').style.display = 'none';
+  $('dashPage').classList.add('vis');
+  $('logoutBtn').classList.add('vis');
+  updateGreeting();
+  initDashboard();
+}
+
+ $('loginForm').onsubmit = async e => {
+  e.preventDefault();
+  const uid = $('uN').value.trim();
+  const pwd = $('uP').value;
+
+  $('lTxt').style.display = 'none';
+  $('lSpin').style.display = 'inline-block';
+  $('loginBtn').disabled = true;
+
+  await new Promise(r => setTimeout(r, 700));
+
+  if (ADMINS.some(a => a.id === uid && a.password === pwd)) {
+    currentUser = uid;
+    sessionStorage.setItem('uw_user', uid);
+    toast(`Welcome back, ${uid}`, 'ok');
+    setTimeout(showDashboard, 500);
+  } else {
+    toast('Invalid username or password', 'er');
+    $('loginCard').classList.add('shake');
+    setTimeout(() => $('loginCard').classList.remove('shake'), 480);
+  }
+
+  $('lTxt').style.display = 'inline';
+  $('lSpin').style.display = 'none';
+  $('loginBtn').disabled = false;
+};
+
+ $('logoutBtn').onclick = () => {
+  sessionStorage.removeItem('uw_user');
+  currentUser = null;
+  toast('Logged out successfully', 'in');
+  showLogin();
+};
+
+/* ================================================================
+   DASHBOARD INITIALIZATION
+   ================================================================ */
+function initDashboard() {
+  selectedDay = todayName();
+  buildDayTabs();
+  loadSchedule();
+  initViz();
+  checkDST();
+
+  /* Listen for real-time Firebase changes */
+  db.ref('BellScheduler').on('value', snap => {
+    schedule = snap.val() || {};
+    DAYS.forEach(d => { if (!schedule[d]) schedule[d] = {}; });
+    renderAll();
+  }, err => {
+    console.warn('Firebase listener error:', err);
+  });
+}
+
+/* ================================================================
+   DAY TABS
+   ================================================================ */
+function buildDayTabs() {
+  const td = todayName();
+  $('dayTabs').innerHTML = DAYS.map(d => {
+    const isToday = d === td;
+    return `<button class="dt${d === selectedDay ? ' on' : ''}" data-d="${d}">${DAY_SHORT[DAYS.indexOf(d)]}${isToday ? '<span class="td"></span>' : ''}</button>`;
+  }).join('');
+
+  $$('.dt').forEach(btn => {
+    btn.onclick = () => {
+      selectedDay = btn.dataset.d;
+      $$('.dt').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      renderSchedule();
+      renderTimeline();
+      renderStats();
+    };
+  });
+}
+
+/* ================================================================
+   LOAD SCHEDULE FROM FIREBASE
+   ================================================================ */
+function loadSchedule() {
+  db.ref('BellScheduler').once('value').then(snap => {
+    schedule = snap.val() || {};
+    DAYS.forEach(d => { if (!schedule[d]) schedule[d] = {}; });
+    renderAll();
+    toast('Schedule synced', 'ok');
+  }).catch(err => {
+    console.warn('Initial load error:', err);
+    DAYS.forEach(d => { if (!schedule[d]) schedule[d] = {}; });
+    renderAll();
+    toast('Using cached data', 'er');
+  });
+}
+
+function renderAll() {
+  renderStats();
+  renderSchedule();
+  renderTimeline();
+  updateGreeting();
+  checkDST();
+}
+
+/* ================================================================
+   STATS
+   ================================================================ */
+function renderStats() {
+  let total = 0;
+  DAYS.forEach(d => total += getActiveBells(d).length);
+  $('sTotal').textContent = total;
+
+  const todayBells = getActiveBells(todayName());
+  $('sToday').textContent = todayBells.length;
+
+  const cur = now24();
+  const passed = todayBells.filter(b => b.time24 <= cur).length;
+  $('sPassed').textContent = passed;
+
+  const used = getActiveBells(selectedDay).length;
+  $('sSlots').textContent = `${used}/${MAX_SLOTS}`;
+
+  updateCountdown();
+}
+
+function updateCountdown() {
+  const td = todayName();
+  const bells = getActiveBells(td);
+  const cur = now24();
+
+  if (selectedDay !== td) {
+    $('wCountdown').textContent = '--:--';
+    $('wNext').textContent = 'Switch to today';
+    $('wNextTime').textContent = '';
+    return;
+  }
+
+  const upcoming = bells.filter(b => b.time24 > cur);
+  if (upcoming.length > 0) {
+    const s = secUntil(upcoming[0].time24);
+    $('wCountdown').textContent = fmtCountdown(s);
+    $('wNext').textContent = 'Next Bell';
+    $('wNextTime').textContent = upcoming[0].time + (upcoming[0].label ? ` — ${upcoming[0].label}` : '');
+  } else {
+    $('wCountdown').textContent = 'Done';
+    $('wNext').textContent = 'No more bells';
+    $('wNextTime').textContent = '';
+  }
+}
+
+/* ================================================================
+   SCHEDULE RENDERING
+   ================================================================ */
+function renderSchedule() {
+  const bells = getActiveBells(selectedDay);
+  const td = todayName();
+  const cur = now24();
+  const isToday = selectedDay === td;
+
+  $('bellCnt').textContent = bells.length;
+  updateCountdown();
+
+  let html = '';
+  if (bells.length < MAX_SLOTS) {
+    html += `<div class="add-c" id="addCard"><i class="fa-solid fa-plus"></i> Add New Bell</div>`;
+  }
+
+  if (!bells.length) {
+    html += `<div class="empty"><i class="fa-regular fa-bell-slash"></i><p>No bells scheduled for ${selectedDay}</p></div>`;
+  } else {
+    bells.forEach((b, i) => {
+      let statusClass = 'sc', statusText = 'Scheduled';
+      if (isToday) {
+        if (b.time24 > cur) { statusClass = 'up'; statusText = 'Upcoming'; }
+        else if (b.time24 === cur) { statusClass = 'now'; statusText = 'Ringing'; }
+        else { statusClass = 'ps'; statusText = 'Passed'; }
+      }
+
+      const isRinging = isToday && b.time24 === cur;
+      const labelHtml = b.label ? `<br><strong style="font-size:.7rem;color:var(--accent)">${escapeHtml(b.label)}</strong>` : '';
+
+      html += `<div class="bi${isRinging ? ' ringing' : ''}" style="animation-delay:${i * 40}ms">
+        <div class="bi-n">${i + 1}</div>
+        <div class="bi-t">${b.time}${labelHtml}</div>
+        <div class="bi-d"><strong>${b.duration}s</strong> ring &middot; Slot ${b.slot}</div>
+        <span class="bi-s ${statusClass}">${statusText}</span>
+        <div class="bi-a">
+          <button class="bi-b pv" data-dur="${b.duration}" title="Preview sound"><i class="fa-solid fa-volume-high"></i></button>
+          <button class="bi-b ed" data-slot="${b.slot}" title="Edit bell"><i class="fa-solid fa-pen"></i></button>
+          <button class="bi-b dl" data-slot="${b.slot}" title="Disable bell"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      </div>`;
+    });
+  }
+
+  $('bellList').innerHTML = html;
+
+  /* Bind events */
+  const addCard = $('addCard');
+  if (addCard) addCard.onclick = openAddModal;
+
+  $$('.bi-b.pv').forEach(btn => {
+    btn.onclick = () => playBell(+btn.dataset.dur);
+  });
+
+  $$('.bi-b.ed').forEach(btn => {
+    btn.onclick = () => openEditModal(selectedDay, +btn.dataset.slot);
+  });
+
+  $$('.bi-b.dl').forEach(btn => {
+    btn.onclick = async () => {
+      const slot = +btn.dataset.slot;
+      if (await showConfirm(`Disable Bell ${slot} on ${selectedDay}? This will clear its time and duration.`)) {
+        disableBell(selectedDay, slot);
+      }
+    };
+  });
+
+  renderStats();
+}
+
+/* ================================================================
+   TIMELINE
+   ================================================================ */
+function renderTimeline() {
+  const bells = getActiveBells(selectedDay);
+  if (!bells.length) {
+    $('tlSection').style.display = 'none';
+    return;
+  }
+
+  $('tlSection').style.display = 'block';
+  const td = todayName();
+  const isToday = selectedDay === td;
+  const now = new Date();
+  const dayProgress = isToday ? ((now.getHours() * 3600 + now.getMinutes() * 60) / 86400) * 100 : 0;
+
+  $('tlProg').style.width = dayProgress + '%';
+  $('tlMk').style.left = dayProgress + '%';
+
+  const cur = now24();
+  $('tlDots').innerHTML = bells.map(b => {
+    const [h, m] = b.time24.split(":").map(Number);
+    const pct = ((h * 3600 + m * 60) / 86400) * 100;
+    const isPast = isToday && b.time24 <= cur;
+    return `<div class="tl-d${isPast ? ' ps' : ''}" style="left:${pct}%" title="${b.time}${b.label ? ' — ' + b.label : ''}"></div>`;
+  }).join('');
+}
+
+/* ================================================================
+   MODAL MANAGEMENT
+   ================================================================ */
+function openAddModal() {
+  $('mTitle').textContent = `Add Bell — ${selectedDay}`;
+  $('mTime').value = '09:00';
+  $('mLabel').value = '';
+  $('mSlider').value = $('mDur').value = 3;
+  $('slVal').textContent = '3';
+  $('mDay').value = selectedDay;
+  $('mSlot').value = '';
+  $('mEdit').value = '0';
+  $('mDisable').style.display = 'none';
+  $('bellModal').classList.add('open');
+  setTimeout(() => $('mTime').focus(), 100);
+}
+
+function openEditModal(day, slot) {
+  const b = (schedule[day] && schedule[day][String(slot)]) || {};
+  const timeVal = b.time ? to24h(b.time) : '09:00';
+  const durVal = b.duration || 3;
+  const labelVal = b.label || '';
+
+  $('mTitle').textContent = `Edit Bell ${slot} — ${day}`;
+  $('mTime').value = timeVal;
+  $('mLabel').value = labelVal;
+  $('mSlider').value = $('mDur').value = durVal;
+  $('slVal').textContent = durVal;
+  $('mDay').value = day;
+  $('mSlot').value = slot;
+  $('mEdit').value = '1';
+  $('mDisable').style.display = 'flex';
+  $('bellModal').classList.add('open');
+  setTimeout(() => $('mTime').focus(), 100);
+}
+
+function closeModal() {
+  $('bellModal').classList.remove('open');
+}
+
+ $('mClose').onclick = closeModal;
+ $('mCancel').onclick = closeModal;
+ $('bellModal').onclick = e => { if (e.target === $('bellModal')) closeModal(); };
+
+/* Slider ↔ Number input sync */
+ $('mSlider').oninput = e => {
+  $('mDur').value = $('slVal').textContent = e.target.value;
+};
+ $('mDur').oninput = e => {
+  const v = Math.min(60, Math.max(1, +e.target.value || 1));
+  $('mSlider').value = $('slVal').textContent = v;
+};
+
+/* Disable button in modal */
+ $('mDisable').onclick = async () => {
+  const day = $('mDay').value;
+  const slot = $('mSlot').value;
+  closeModal();
+  if (await showConfirm(`Disable Bell ${slot} on ${day}?`)) {
+    disableBell(day, +slot);
+  }
+};
+
+/* Form submit */
+ $('bellForm').onsubmit = e => {
+  e.preventDefault();
+  const time = $('mTime').value;
+  const dur = +$('mDur').value;
+  const label = $('mLabel').value.trim();
+  const day = $('mDay').value;
+  const isEdit = $('mEdit').value === '1';
+
+  if (!time) { toast('Please select a time', 'er'); return; }
+  if (!dur || dur < 1) { toast('Duration must be at least 1 second', 'er'); return; }
+
+  const time12 = to12h(time);
+
+  if (isEdit) {
+    saveBell(day, +$('mSlot').value, { time: time12, duration: dur, label });
+  } else {
+    const slot = findEmptySlot(day);
+    if (slot === -1) { toast('All 15 slots are full for ' + day, 'er'); return; }
+    saveBell(day, slot, { time: time12, duration: dur, label });
+  }
+  closeModal();
+};
+
+/* ================================================================
+   CRUD OPERATIONS
+   ================================================================ */
+function saveBell(day, slot, data) {
+  if (!schedule[day]) schedule[day] = {};
+  schedule[day][String(slot)] = data;
+
+  const labelStr = data.label ? ` (${data.label})` : '';
+  addLog(`${data.time}${labelStr} → ${day} Slot ${slot}`, 'add');
+
+  db.ref(`BellScheduler/${day}/${slot}`).set(data)
+    .then(() => toast(`Bell ${slot} saved successfully`, 'ok'))
+    .catch(err => {
+      toast('Failed to save to Firebase', 'er');
+      console.error(err);
+    });
+}
+
+function disableBell(day, slot) {
+  if (!schedule[day]) schedule[day] = {};
+  const old = schedule[day][String(slot)];
+  const labelStr = old && old.label ? ` (${old.label})` : '';
+  schedule[day][String(slot)] = { time: "", duration: 0, label: "" };
+
+  addLog(`Bell ${slot} disabled on ${day}${labelStr}`, 'del');
+
+  db.ref(`BellScheduler/${day}/${slot}`).set({ time: "", duration: 0, label: "" })
+    .then(() => toast(`Bell ${slot} disabled`, 'in'))
+    .catch(err => {
+      toast('Failed to update Firebase', 'er');
+      console.error(err);
+    });
+}
+
+/* ================================================================
+   COPY DAY
+   ================================================================ */
+async function copyDay() {
+  const from = selectedDay;
+  const others = DAYS.filter(d => d !== from);
+  const names = others.map((d, i) => `${i + 1}. ${d}`).join('\n');
+
+  /* Custom inline prompt replacement */
+  const target = prompt(`Copy ${from}'s schedule to which day?\n\n${names}\n\nType the day name:`);
+  if (!target) return;
+
+  const trimmed = target.trim();
+  if (!DAYS.includes(trimmed)) { toast('Invalid day name', 'er'); return; }
+
+  const bells = getActiveBells(from);
+  if (!bells.length) { toast('No active bells to copy', 'er'); return; }
+
+  if (!await showConfirm(`Copy ${bells.length} bells from ${from} to ${trimmed}?\nThis will replace ${trimmed}'s entire schedule.`)) return;
+
+  if (!schedule[trimmed]) schedule[trimmed] = {};
+
+  /* Clear target */
+  for (let i = 1; i <= MAX_SLOTS; i++) {
+    schedule[trimmed][String(i)] = { time: "", duration: 0, label: "" };
+  }
+
+  /* Copy bells */
+  bells.forEach((b, i) => {
+    if (i < MAX_SLOTS) {
+      schedule[trimmed][String(i + 1)] = { time: b.time, duration: b.duration, label: b.label };
+    }
+  });
+
+  addLog(`Copied ${bells.length} bells: ${from} → ${trimmed}`, 'edit');
+
+  /* Batch update Firebase */
+  const updates = {};
+  for (let i = 1; i <= MAX_SLOTS; i++) {
+    updates[`${trimmed}/${i}`] = schedule[trimmed][String(i)];
+  }
+  db.ref('BellScheduler').update(updates)
+    .then(() => toast(`Schedule copied to ${trimmed}`, 'ok'))
+    .catch(err => toast('Copy failed', 'er'));
+}
+
+/* ================================================================
+   AUTO-RING CHECKER
+   ================================================================ */
+function checkAutoRing() {
+  const td = todayName();
+  const bells = getActiveBells(td);
+  if (!bells.length) return;
+
+  const cur = now24();
+  const sec = new Date().getSeconds();
+
+  bells.forEach(b => {
+    const key = `${td}-${b.slot}-${b.time24}`;
+    if (b.time24 === cur && sec === 0 && !rangSet.has(key)) {
+      rangSet.add(key);
+      playBell(b.duration);
+      const labelStr = b.label ? ` (${b.label})` : '';
+      toast(`Bell ringing: ${b.time}${labelStr} — ${b.duration}s`, 'ok');
+      addLog(`Bell rang: ${b.time}${labelStr}`, 'ring');
+      renderSchedule();
+    }
+    if (b.time24 !== cur && rangSet.has(key)) {
+      rangSet.delete(key);
+    }
+  });
+}
+
+/* ================================================================
+   QUICK ACTIONS
+   ================================================================ */
+ $('qaAdd').onclick = openAddModal;
+ $('qaTest').onclick = () => { playBell(5); toast('Playing 5-second test bell', 'in'); };
+ $('qaToday').onclick = () => {
+  selectedDay = todayName();
+  $$('.dt').forEach(b => b.classList.toggle('on', b.dataset.d === selectedDay));
+  renderSchedule();
+  renderTimeline();
+  renderStats();
+  toast('Jumped to today\'s schedule', 'in');
+};
+ $('qaCopy').onclick = copyDay;
+
+/* ================================================================
+   KEYBOARD SHORTCUTS
+   ================================================================ */
+document.onkeydown = e => {
+  if (e.key === 'Escape') {
+    if ($('cfmBg').classList.contains('open')) closeConfirm(false);
+    else if ($('bellModal').classList.contains('open')) closeModal();
+  }
+};
+
+/* ================================================================
+   PERIODIC TICKERS
+   ================================================================ */
+function startTickers() {
+  setInterval(updateClock, 1000);
+  setInterval(updateCountdown, 1000);
+  setInterval(checkAutoRing, 1000);
+
+  /* Refresh schedule display every 30s (for status changes) */
+  setInterval(() => {
+    if ($('dashPage').classList.contains('vis')) {
+      renderSchedule();
+      renderTimeline();
+      checkDST();
+    }
+  }, 30000);
+}
+
+/* ================================================================
+   APPLICATION BOOT
+   ================================================================ */
+function boot() {
+  initTheme();
+  initParticles();
+  initBgCanvas();
+  updateClock();
+  startTickers();
+  renderLog();
+
+  $('themeBtn').onclick = toggleTheme;
+
+  /* Restore session */
+  const savedUser = sessionStorage.getItem('uw_user');
+  if (savedUser) {
+    currentUser = savedUser;
+    showDashboard();
+  } else {
+    showLogin();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>
