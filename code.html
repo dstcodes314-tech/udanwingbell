@@ -9,7 +9,7 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#060910;--bg2:#0C1018;--card:#111822;--card2:#161E29;--card3:#1A2332;
+      --bg:#06090E;--bg2:#0C1018;--card:#111822;--card2:#161E29;--card3:#1A2332;
       --border:#1B2536;--border2:#263345;--border3:#304050;
       --fg:#EAF0F6;--fg2:#B8C5D4;--muted:#556880;
       --accent:#E89040;--accent2:#F0A050;--accent3:#D07830;
@@ -40,11 +40,14 @@
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;transition:background .5s,color .5s}
     ::selection{background:var(--accent);color:#000}
     input,button,select,textarea{font-family:inherit}
+
+    /* Scrollbar */
     ::-webkit-scrollbar{width:6px;height:6px}
     ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
     ::-webkit-scrollbar-thumb:hover{background:var(--muted)}
 
+    /* === BACKGROUND === */
     .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
     .bg-layer canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%}
     .bg-orbs{position:absolute;inset:0}
@@ -56,16 +59,19 @@
     body.light .bg-orbs .o{opacity:.06;filter:blur(160px)}
     @keyframes orbF{0%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-15px) scale(1.04)}66%{transform:translate(-15px,20px) scale(.97)}100%{transform:translate(10px,-8px) scale(1.02)}}
 
+    /* Particles */
     .particles{position:absolute;inset:0}
     .particle{position:absolute;width:1.5px;height:1.5px;background:var(--accent);border-radius:50%;opacity:0;animation:pFade linear infinite}
     @keyframes pFade{0%{opacity:0;transform:translateY(0) scale(.5)}15%{opacity:.5;transform:scale(1)}85%{opacity:.4}100%{opacity:0;transform:translateY(-100vh) scale(.3)}}
 
+    /* Noise overlay */
     .noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
     body.light .noise{opacity:.012}
 
+    /* === WRAPPER === */
     .wrap{position:relative;z-index:1;width:100%;max-width:1120px;margin:0 auto;padding:0 clamp(1rem,3.5vw,2rem)}
 
-    /* HEADER */
+    /* === HEADER === */
     header{background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);padding:.65rem 0;position:sticky;top:0;z-index:100;transition:background .5s}
     .hdr{display:flex;justify-content:space-between;align-items:center}
     .logo{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);letter-spacing:-.2px}
@@ -77,6 +83,8 @@
     .clock .c{animation:blk 1s step-end infinite;color:var(--accent)}
     .clock .s{font-weight:300;font-size:.75rem;color:var(--muted);margin-left:1px}
     @keyframes blk{50%{opacity:.12}}
+    .dst-badge{font-size:.55rem;font-weight:700;padding:2px 6px;border-radius:5px;background:var(--violet-dim);color:var(--violet);text-transform:uppercase;letter-spacing:.5px;display:none}
+    .dst-badge.on{display:inline-block}
     .online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green-mid);animation:pulse 2s ease-in-out infinite;flex-shrink:0}
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
     .hdr-sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
@@ -86,7 +94,7 @@
     .logout-btn:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-1px)}
     .logout-btn.vis{display:inline-flex}
 
-    /* LOGIN */
+    /* === LOGIN === */
     .login-page{flex:1;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);padding:2rem 1rem}
     .login-card{width:100%;max-width:430px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2.8rem 2.4rem 2.4rem;position:relative;overflow:hidden;animation:cUp .65s cubic-bezier(.16,1,.3,1);box-shadow:var(--shadow)}
     .login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--violet),var(--accent));background-size:200% 100%;animation:gradShift 4s linear infinite}
@@ -119,11 +127,12 @@
     .shake{animation:shk .45s ease}
     @keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 
-    /* DASHBOARD */
+    /* === DASHBOARD === */
     .dash{display:none;flex:1;padding:1.2rem 0 2rem;animation:dFu .55s ease}
     .dash.vis{display:block}
     @keyframes dFu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
+    /* Welcome */
     .welcome{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem 1.8rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
     .welcome::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent),var(--teal),var(--violet))}
     .welcome::after{content:'';position:absolute;top:-50%;right:-15%;width:350px;height:350px;background:radial-gradient(circle,var(--accent-dim),transparent 55%);pointer-events:none}
@@ -138,10 +147,11 @@
     .w-right .w-next{font-size:.7rem;color:var(--muted);margin-top:3px;font-weight:500}
     .w-right .w-next-time{font-size:.82rem;color:var(--fg2);font-weight:600;margin-top:1px}
 
+    /* Stats */
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.2rem}
     .st{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;transition:all .35s;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.12)}
     .st:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 8px 24px rgba(0,0,0,.2)}
-    .st .si{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-bottom:10px}
+    .st .si{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-bottom:10px;position:relative}
     .st:nth-child(1) .si{background:linear-gradient(135deg,var(--accent-dim),var(--accent-mid));color:var(--accent)}
     .st:nth-child(2) .si{background:linear-gradient(135deg,var(--teal-dim),var(--teal-mid));color:var(--teal)}
     .st:nth-child(3) .si{background:linear-gradient(135deg,var(--green-dim),var(--green-mid));color:var(--green)}
@@ -151,17 +161,17 @@
     .st .sl{font-size:.7rem;color:var(--muted);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
     .st .st-bg{position:absolute;bottom:-10px;right:-10px;font-size:4rem;opacity:.03;pointer-events:none}
 
+    /* Main Grid */
     .main-grid{display:grid;grid-template-columns:1fr 290px;gap:14px;align-items:start}
 
+    /* Schedule Panel */
     .sched-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow)}
     .sched-top{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;border-bottom:1px solid var(--border);background:var(--card2)}
     .sched-top h3{font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:8px}
     .sched-top h3 i{color:var(--accent);font-size:.8rem}
-    .sched-top-r{display:flex;align-items:center;gap:8px}
     .sched-cnt{background:var(--accent-dim);color:var(--accent);font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(232,144,64,.1)}
-    .del-all-btn{padding:5px 10px;border-radius:8px;border:1px solid var(--red-dim);background:var(--red-dim);color:var(--red);cursor:pointer;font-size:.68rem;font-weight:700;display:flex;align-items:center;gap:5px;transition:all .25s}
-    .del-all-btn:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-1px)}
 
+    /* Day Tabs */
     .day-tabs{display:flex;gap:3px;padding:8px 1rem;border-bottom:1px solid var(--border);overflow-x:auto}
     .day-tabs::-webkit-scrollbar{height:0}
     .dt{flex:1;min-width:0;padding:8px 2px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-size:.7rem;font-weight:600;cursor:pointer;transition:all .25s;text-align:center;white-space:nowrap;position:relative}
@@ -170,6 +180,7 @@
     .dt .td{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-left:2px;vertical-align:middle;box-shadow:0 0 6px var(--accent-glow)}
     .dt.on .td{background:#0A0D12;box-shadow:none}
 
+    /* Bell List */
     .bl{padding:10px 1rem 1rem;max-height:480px;overflow-y:auto}
     .add-c{background:var(--card2);border:2px dashed var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-weight:600;font-size:.84rem;transition:all .3s}
     .add-c:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);transform:translateY(-1px);box-shadow:0 4px 16px var(--accent-dim)}
@@ -189,6 +200,7 @@
     .bi-s.now{background:var(--accent);color:#0A0D12;animation:sP .8s ease infinite alternate;border:none}
     @keyframes sP{from{box-shadow:0 0 0 0 var(--accent-glow)}to{box-shadow:0 0 0 8px transparent}}
     .bi-s.ps{background:rgba(255,255,255,.02);color:var(--muted)}
+    .bi-s.sc{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(34,211,183,.08)}
     .bi-a{display:flex;gap:3px;flex-shrink:0;position:relative;z-index:1}
     .bi-b{width:28px;height:28px;border:none;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.7rem;background:transparent}
     .bi-b.pv{color:var(--muted)}.bi-b.pv:hover{background:var(--accent-dim);color:var(--accent)}
@@ -198,6 +210,7 @@
     .empty i{font-size:36px;opacity:.15;margin-bottom:10px;display:block}
     .empty p{font-size:.83rem}
 
+    /* Timeline */
     .tl-section{padding:0 1rem 1rem}
     .tl-label{font-size:.65rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:8px}
     .tl-bar{position:relative;height:38px;background:rgba(255,255,255,.015);border-radius:10px;border:1px solid var(--border);overflow:hidden}
@@ -211,12 +224,14 @@
     .tl-lbls{position:absolute;inset:0;display:flex;align-items:flex-end;padding:0 8px;justify-content:space-between;pointer-events:none}
     .tl-lbls span{font-size:.48rem;color:var(--muted);opacity:.3}
 
+    /* Sidebar */
     .sidebar{display:flex;flex-direction:column;gap:12px}
     .side-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.1rem 1.2rem;transition:all .35s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
     .side-card:hover{border-color:var(--border2);box-shadow:0 4px 16px rgba(0,0,0,.15)}
     .side-card h4{font-size:.68rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
     .side-card h4 i{font-size:.72rem}
 
+    /* Quick Actions */
     .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
     .qa-btn{padding:11px 6px;border:1px solid var(--border);border-radius:10px;background:var(--card2);color:var(--fg2);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:.68rem;font-weight:600;transition:all .3s}
     .qa-btn i{font-size:.95rem;transition:transform .3s}
@@ -230,12 +245,12 @@
     .qa-btn:nth-child(3) i{color:var(--green)}
     .qa-btn:nth-child(4):hover{border-color:var(--violet);color:var(--violet)}
     .qa-btn:nth-child(4) i{color:var(--violet)}
-    .qa-btn:nth-child(5):hover{border-color:var(--red);color:var(--red)}
-    .qa-btn:nth-child(5) i{color:var(--red)}
 
+    /* Sound Visualizer */
     .viz-canvas{width:100%;height:64px;display:block;border-radius:10px;margin-bottom:4px}
     .viz-label{text-align:center;font-size:.65rem;color:var(--muted)}
 
+    /* Activity Log */
     .log-list{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:0}
     .log-item{display:flex;align-items:flex-start;gap:8px;font-size:.75rem;padding:7px 0;border-bottom:1px solid var(--border);animation:si .3s ease both}
     .log-item:last-child{border-bottom:none}
@@ -247,11 +262,11 @@
     .log-text{color:var(--fg2);line-height:1.3}
     .log-time{color:var(--muted);font-size:.64rem;margin-top:1px}
 
-    /* MODAL */
+    /* === MODAL === */
     .modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem}
     .modal-bg.open{display:flex;animation:mFi .2s ease}
     @keyframes mFi{from{opacity:0}to{opacity:1}}
-    .modal-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;width:100%;max-width:460px;animation:mP .35s cubic-bezier(.16,1,.3,1);position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    .modal-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;width:100%;max-width:430px;animation:mP .35s cubic-bezier(.16,1,.3,1);position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4)}
     @keyframes mP{from{opacity:0;transform:scale(.9) translateY(16px)}to{opacity:1;transform:none}}
     .modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--violet));border-radius:var(--r-xl) var(--r-xl) 0 0}
     .mt{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
@@ -260,7 +275,7 @@
     .mx:hover{color:var(--red);border-color:var(--red);transform:rotate(90deg)}
     .mf{margin-bottom:1.1rem}
     .mf label{display:block;font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-    .mf input[type="time"],.mf input[type="number"],.mf input[type="text"],.mf select{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--fg);font-size:.95rem;outline:none;transition:all .3s}
+    .mf input[type="time"],.mf input[type="number"],.mf select{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--fg);font-size:.95rem;outline:none;transition:all .3s}
     .mf input:focus,.mf select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-dim)}
     .mf select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23556880' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
     .sl-w{margin-bottom:1.3rem}
@@ -277,15 +292,10 @@
     .mbtn-s{background:linear-gradient(135deg,#E89040,#C07028);color:#fff;box-shadow:0 4px 16px var(--accent-glow);flex:2}
     .mbtn-s:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--accent-glow)}
 
-    /* COPY DAY MODAL */
-    .copy-arrow{display:flex;align-items:center;justify-content:center;padding:8px 0;color:var(--accent);font-size:1.2rem}
-    .copy-info{background:var(--accent-dim);border:1px solid rgba(232,144,64,.1);border-radius:10px;padding:10px 14px;margin-top:12px;font-size:.78rem;color:var(--fg2);display:flex;align-items:flex-start;gap:8px}
-    .copy-info i{color:var(--accent);margin-top:2px;flex-shrink:0}
-
-    /* CONFIRM */
+    /* === CONFIRM === */
     .cfm-bg{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem}
     .cfm-bg.open{display:flex;animation:mFi .2s ease}
-    .cfm-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;width:100%;max-width:380px;text-align:center;animation:mP .35s cubic-bezier(.16,1,.3,1);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    .cfm-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;width:100%;max-width:360px;text-align:center;animation:mP .35s cubic-bezier(.16,1,.3,1);box-shadow:0 20px 60px rgba(0,0,0,.4)}
     .cfm-box .ci{width:56px;height:56px;border-radius:50%;background:var(--red-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:1px solid rgba(240,96,96,.12)}
     .cfm-box .ci i{font-size:1.4rem;color:var(--red)}
     .cfm-box p{font-size:.9rem;color:var(--fg);margin-bottom:1.4rem;line-height:1.5}
@@ -296,7 +306,7 @@
     .cb-y{background:var(--red);color:#fff;box-shadow:0 4px 14px var(--red-mid)}
     .cb-y:hover{opacity:.85;transform:translateY(-1px)}
 
-    /* TOAST */
+    /* === TOAST === */
     .tw{position:fixed;top:70px;right:14px;z-index:700;display:flex;flex-direction:column;gap:8px;pointer-events:none}
     .ts{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:10px;min-width:250px;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:tI .35s cubic-bezier(.16,1,.3,1);backdrop-filter:blur(12px);pointer-events:auto}
     .ts.out{animation:tO .25s ease forwards}
@@ -306,10 +316,12 @@
     @keyframes tI{from{opacity:0;transform:translateX(30px) scale(.92)}to{opacity:1;transform:none}}
     @keyframes tO{to{opacity:0;transform:translateX(30px) scale(.92)}}
 
+    /* Ring FX */
     .ring-fx{position:fixed;inset:0;z-index:400;pointer-events:none;background:radial-gradient(ellipse at center,var(--accent-glow) 0%,transparent 55%);opacity:0;transition:opacity .15s}
     .ring-fx.on{animation:rP .7s ease-in-out infinite alternate}
     @keyframes rP{from{opacity:.15}to{opacity:.5}}
 
+    /* Footer */
     footer{background:var(--card);border-top:1px solid var(--border);padding:.9rem 0;margin-top:auto;transition:background .5s}
     .ft{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--muted);flex-wrap:wrap;gap:6px}
     .ft-l{display:flex;align-items:center;gap:6px}
@@ -318,6 +330,7 @@
     .ft-r .heart{color:var(--red);animation:heartBeat 1.5s ease-in-out infinite}
     @keyframes heartBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}45%{transform:scale(1.15)}60%{transform:scale(1)}}
 
+    /* Responsive */
     @media(max-width:920px){.main-grid{grid-template-columns:1fr}.sidebar{flex-direction:row;flex-wrap:wrap}.sidebar .side-card{flex:1;min-width:220px}}
     @media(max-width:640px){
       .stats{grid-template-columns:repeat(2,1fr)}
@@ -374,36 +387,17 @@
         <div class="sl-v">Duration: <span id="slVal">3</span> seconds</div>
         <input type="range" id="mSlider" min="1" max="60" value="3">
       </div>
+      <div class="mf">
+        <label for="mDur">Duration (seconds)</label>
+        <input type="number" id="mDur" min="1" max="60" value="3" required>
+      </div>
       <input type="hidden" id="mDay"><input type="hidden" id="mSlot"><input type="hidden" id="mEdit" value="0">
       <div class="mb">
         <button type="button" class="mbtn mbtn-c" id="mCancel">Cancel</button>
+        <button type="button" class="mbtn mbtn-d" id="mDisable" style="display:none"><i class="fa-solid fa-ban"></i> Disable</button>
         <button type="submit" class="mbtn mbtn-s"><i class="fa-solid fa-check"></i> Save Bell</button>
       </div>
     </form>
-  </div>
-</div>
-
-<!-- Copy Day Modal -->
-<div class="modal-bg" id="copyModal">
-  <div class="modal-box">
-    <div class="mt"><h2>Copy Day Schedule</h2><button class="mx" id="copyClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-    <div class="mf">
-      <label for="copyFrom">Source Day (copy from)</label>
-      <select id="copyFrom"></select>
-    </div>
-    <div class="copy-arrow"><i class="fa-solid fa-arrow-down"></i></div>
-    <div class="mf">
-      <label for="copyTo">Target Day (copy to)</label>
-      <select id="copyTo"></select>
-    </div>
-    <div class="copy-info">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>This will replace all bells in the target day with the schedule from the source day.</span>
-    </div>
-    <div class="mb" style="margin-top:1.2rem">
-      <button type="button" class="mbtn mbtn-c" id="copyCancel">Cancel</button>
-      <button type="button" class="mbtn mbtn-s" id="copyConfirm"><i class="fa-solid fa-clone"></i> Copy Schedule</button>
-    </div>
   </div>
 </div>
 
@@ -415,8 +409,9 @@
       <span>Udan Wing</span>
     </div>
     <div class="hdr-r">
-      <div class="online-dot" id="onlineDot" title="Connected"></div>
+      <div class="online-dot" title="Connected"></div>
       <div class="clock" id="clock" aria-label="Current time">--<span class="c">:</span>--<span class="c">:</span><span class="s">--</span></div>
+      <span class="dst-badge" id="dstBadge">DST</span>
       <div class="hdr-sep"></div>
       <button class="hdr-btn" id="themeBtn" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
       <button class="logout-btn" id="logoutBtn" aria-label="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
@@ -455,6 +450,7 @@
 <!-- Dashboard -->
 <main class="dash" id="dashPage">
   <div class="wrap">
+    <!-- Welcome Banner -->
     <div class="welcome">
       <div class="w-ic"><i class="fa-solid fa-hand-sparkles"></i></div>
       <div class="w-info">
@@ -468,21 +464,41 @@
       </div>
     </div>
 
+    <!-- Stats Grid -->
     <div class="stats">
-      <div class="st"><div class="si"><i class="fa-solid fa-bell"></i></div><div class="sv" id="sTotal">0</div><div class="sl">Total Active</div><div class="st-bg"><i class="fa-solid fa-bell"></i></div></div>
-      <div class="st"><div class="si"><i class="fa-solid fa-calendar-day"></i></div><div class="sv" id="sToday">0</div><div class="sl">Today's Bells</div><div class="st-bg"><i class="fa-solid fa-calendar-day"></i></div></div>
-      <div class="st"><div class="si"><i class="fa-solid fa-circle-check"></i></div><div class="sv" id="sPassed">0</div><div class="sl">Passed Today</div><div class="st-bg"><i class="fa-solid fa-circle-check"></i></div></div>
-      <div class="st"><div class="si"><i class="fa-solid fa-layer-group"></i></div><div class="sv" id="sSlots">0/15</div><div class="sl">Slots Used</div><div class="st-bg"><i class="fa-solid fa-layer-group"></i></div></div>
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-bell"></i></div>
+        <div class="sv" id="sTotal">0</div>
+        <div class="sl">Total Active</div>
+        <div class="st-bg"><i class="fa-solid fa-bell"></i></div>
+      </div>
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-calendar-day"></i></div>
+        <div class="sv" id="sToday">0</div>
+        <div class="sl">Today's Bells</div>
+        <div class="st-bg"><i class="fa-solid fa-calendar-day"></i></div>
+      </div>
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="sv" id="sPassed">0</div>
+        <div class="sl">Passed Today</div>
+        <div class="st-bg"><i class="fa-solid fa-circle-check"></i></div>
+      </div>
+      <div class="st">
+        <div class="si"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="sv" id="sSlots">0/15</div>
+        <div class="sl">Slots Used</div>
+        <div class="st-bg"><i class="fa-solid fa-layer-group"></i></div>
+      </div>
     </div>
 
+    <!-- Main Content Grid -->
     <div class="main-grid">
+      <!-- Schedule Panel -->
       <div class="sched-panel">
         <div class="sched-top">
           <h3><i class="fa-solid fa-list-check"></i> Bell Schedule</h3>
-          <div class="sched-top-r">
-            <span class="sched-cnt" id="bellCnt">0</span>
-            <button class="del-all-btn" id="delAllBtn" title="Delete all bells for this day"><i class="fa-solid fa-trash-can"></i> Delete All</button>
-          </div>
+          <span class="sched-cnt" id="bellCnt">0</span>
         </div>
         <div class="day-tabs" id="dayTabs"></div>
         <div class="bl" id="bellList"></div>
@@ -497,6 +513,7 @@
         </div>
       </div>
 
+      <!-- Sidebar -->
       <div class="sidebar">
         <div class="side-card">
           <h4><i class="fa-solid fa-bolt"></i> Quick Actions</h4>
@@ -505,7 +522,6 @@
             <button class="qa-btn" id="qaTest"><i class="fa-solid fa-volume-high"></i>Test Sound</button>
             <button class="qa-btn" id="qaToday"><i class="fa-solid fa-calendar"></i>Go Today</button>
             <button class="qa-btn" id="qaCopy"><i class="fa-solid fa-clone"></i>Copy Day</button>
-            <button class="qa-btn" id="qaDelAll" style="grid-column:span 2"><i class="fa-solid fa-trash-can"></i>Delete All Bells</button>
           </div>
         </div>
         <div class="side-card">
@@ -565,25 +581,12 @@ let activityLog = [];
 let vizAnimId = null;
 let bgAnimId = null;
 let isCurrentlyRinging = false;
-let firebaseConnected = false;
-let scheduleListener = null;
 
 /* ================================================================
    FIREBASE INIT
    ================================================================ */
 firebase.initializeApp(FB_CONFIG);
 const db = firebase.database();
-
-/* Monitor connection status */
-db.ref('.info/connected').on('value', snap => {
-  firebaseConnected = snap.val() === true;
-  const dot = document.getElementById('onlineDot');
-  if (dot) {
-    dot.style.background = firebaseConnected ? 'var(--green)' : 'var(--red)';
-    dot.style.boxShadow = firebaseConnected ? '0 0 8px var(--green-mid)' : '0 0 8px var(--red-mid)';
-    dot.title = firebaseConnected ? 'Connected to Firebase' : 'Disconnected';
-  }
-});
 
 /* ================================================================
    DOM HELPERS
@@ -606,26 +609,15 @@ function now24() {
 
 function to12h(t) {
   if (!t) return "";
-  /* Handle both 24h "HH:MM" and 12h "HH:MM AM/PM" formats */
-  t = String(t).trim();
-  const hasAmPm = /\s*(AM|PM)\s*$/i.test(t);
-  if (hasAmPm) return t; /* Already 12h format */
   const [h, m] = t.split(":").map(Number);
-  if (isNaN(h) || isNaN(m)) return t;
   const ap = h >= 12 ? "PM" : "AM";
   return `${String(h % 12 || 12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${ap}`;
 }
 
 function to24h(t) {
   if (!t) return "";
-  t = String(t).trim();
   const x = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-  if (!x) {
-    /* Already 24h format or invalid */
-    const parts = t.split(":");
-    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) return t;
-    return t;
-  }
+  if (!x) return t;
   let h = +x[1];
   if (x[3].toUpperCase() === "PM" && h !== 12) h += 12;
   if (x[3].toUpperCase() === "AM" && h === 12) h = 0;
@@ -633,8 +625,7 @@ function to24h(t) {
 }
 
 function secUntil(t) {
-  const t24 = to24h(t);
-  const [h, m] = t24.split(":").map(Number);
+  const [h, m] = t.split(":").map(Number);
   const now = new Date(), target = new Date(now);
   target.setHours(h, m, 0, 0);
   let diff = (target - now) / 1000;
@@ -683,6 +674,20 @@ function findEmptySlot(day) {
   return -1;
 }
 
+function isDST() {
+  const d = new Date();
+  const jan = new Date(d.getFullYear(), 0, 1);
+  const jul = new Date(d.getFullYear(), 6, 1);
+  return d.getTimezoneOffset() < Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+}
+
+function getTZAbbr() {
+  try {
+    return Intl.DateTimeFormat('en', { timeZoneName: 'short' })
+      .formatToParts(new Date()).find(p => p.type === 'timeZoneName').value;
+  } catch { return ""; }
+}
+
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
@@ -690,7 +695,7 @@ function escapeHtml(str) {
 }
 
 /* ================================================================
-   BACKGROUND CANVAS
+   BACKGROUND CANVAS (Animated Grid + Glow)
    ================================================================ */
 function initBgCanvas() {
   const canvas = $('bgCanvas');
@@ -717,21 +722,27 @@ function initBgCanvas() {
     const offsetX = (time * 8) % spacing;
     const offsetY = (time * 4) % spacing;
 
+    /* Draw grid lines */
     ctx.strokeStyle = gridColor;
     ctx.lineWidth = 0.5;
     ctx.beginPath();
     for (let x = -spacing + offsetX; x < w + spacing; x += spacing) {
-      ctx.moveTo(x, 0); ctx.lineTo(x, h);
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
     }
     for (let y = -spacing + offsetY; y < h + spacing; y += spacing) {
-      ctx.moveTo(0, y); ctx.lineTo(w, y);
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
     }
     ctx.stroke();
 
+    /* Draw subtle intersection dots */
     ctx.fillStyle = isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.025)';
     for (let x = -spacing + offsetX; x < w + spacing; x += spacing) {
       for (let y = -spacing + offsetY; y < h + spacing; y += spacing) {
-        ctx.beginPath(); ctx.arc(x, y, 1, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(x, y, 1, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
@@ -789,7 +800,7 @@ function renderLog() {
     el.innerHTML = '<div class="empty" style="padding:18px 0"><i class="fa-solid fa-inbox" style="font-size:22px"></i><p>No activity yet</p></div>';
     return;
   }
-  el.innerHTML = activityLog.slice(0, 15).map(l => {
+  el.innerHTML = activityLog.map(l => {
     const t = l.time;
     const ts = `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
     return `<div class="log-item"><div class="log-dot ${l.type}"></div><div><div class="log-text">${escapeHtml(l.text)}</div><div class="log-time">${ts}</div></div></div>`;
@@ -817,7 +828,7 @@ function closeConfirm(value) {
  $('cfmBg').onclick = e => { if (e.target === $('cfmBg')) closeConfirm(false); };
 
 /* ================================================================
-   AUDIO ENGINE
+   AUDIO ENGINE (Multi-harmonic Bell)
    ================================================================ */
 function getAudioCtx() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -830,7 +841,7 @@ function playBell(duration) {
   const now = ctx.currentTime;
   const dur = Math.min(Math.max(duration, 0.5), 10);
 
-  /* Multi-harmonic bell timbre */
+  /* Fundamental + harmonics for bell timbre */
   const partials = [
     { freq: 523.25, gain: 0.30, delay: 0 },
     { freq: 1046.5, gain: 0.15, delay: 0.02 },
@@ -846,28 +857,30 @@ function playBell(duration) {
     osc.type = 'sine';
     osc.frequency.value = p.freq;
 
-    /* Bell-like envelope: fast attack, exponential decay */
-    gain.gain.setValueAtTime(0, now + p.delay);
-    gain.gain.linearRampToValueAtTime(p.gain, now + p.delay + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + p.delay + dur);
+    /* ADSR-like envelope */
+    const attackTime = 0.003;
+    const start = now + p.delay;
+    gain.gain.setValueAtTime(0, start);
+    gain.gain.linearRampToValueAtTime(p.gain, start + attackTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+
+    /* Vibrato for realism */
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 5.5;
+    lfoGain.gain.value = 3.5;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    lfo.start(start);
+    lfo.stop(start + dur + 0.1);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.start(now + p.delay);
-    osc.stop(now + p.delay + dur + 0.05);
+    osc.start(start);
+    osc.stop(start + dur + 0.1);
   });
 
-  /* Trigger ring visual effect */
-  triggerRingFx(dur);
-}
-
-function playTestBell() {
-  playBell(2);
-  addLog("Test bell played", "ring");
-  toast("Test bell ringing!", "ok");
-}
-
-function triggerRingFx(dur) {
+  /* Visual ring effect */
   isCurrentlyRinging = true;
   $('ringFx').classList.add('on');
   setTimeout(() => {
@@ -877,7 +890,7 @@ function triggerRingFx(dur) {
 }
 
 /* ================================================================
-   SOUND VISUALIZER
+   WAVEFORM VISUALIZER
    ================================================================ */
 function initViz() {
   const canvas = $('vizCanvas');
@@ -900,32 +913,80 @@ function initViz() {
     ctx.clearRect(0, 0, w, h);
 
     const isLight = document.body.classList.contains('light');
-    const baseColor = isLight ? [232, 144, 64] : [232, 144, 64];
-    const intensity = isCurrentlyRinging ? 3 : 1;
+    const bgAlpha = isLight ? 0.02 : 0.015;
+    const centerAlpha = isLight ? 0.04 : 0.025;
 
-    ctx.lineWidth = 1.5;
-    for (let wave = 0; wave < 3; wave++) {
+    /* Multiple layered waves */
+    const waves = [
+      { amp: h * 0.32, freq: 0.022, speed: 0.045, color: 'rgba(232,144,64,0.55)', lw: 2.2 },
+      { amp: h * 0.22, freq: 0.032, speed: 0.065, color: 'rgba(34,211,183,0.35)', lw: 1.6 },
+      { amp: h * 0.16, freq: 0.042, speed: 0.035, color: 'rgba(144,112,240,0.25)', lw: 1.2 },
+      { amp: h * 0.10, freq: 0.055, speed: 0.08,  color: 'rgba(240,192,64,0.18)', lw: 0.8 }
+    ];
+
+    waves.forEach(wv => {
       ctx.beginPath();
-      const alpha = (0.6 - wave * 0.15) * intensity;
-      ctx.strokeStyle = `rgba(${baseColor[0]},${baseColor[1]},${baseColor[2]},${Math.min(alpha, 1)})`;
+      ctx.strokeStyle = wv.color;
+      ctx.lineWidth = wv.lw;
       for (let x = 0; x <= w; x++) {
-        const freq = 0.03 + wave * 0.01;
-        const amp = (h * 0.2 + wave * 4) * intensity;
-        const y = h / 2 + Math.sin(x * freq + t * (2 + wave) + wave * 1.5) * amp * 0.5
-                  + Math.sin(x * freq * 2.3 + t * 1.5) * amp * 0.15;
-        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        const y = h / 2 +
+          Math.sin(x * wv.freq + t * wv.speed * 60) * wv.amp *
+          Math.sin(x * 0.006 + t * 0.015) *
+          (isCurrentlyRinging ? 1.5 : 0.7 + Math.sin(t * 2) * 0.3);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       }
       ctx.stroke();
-    }
+    });
 
-    t += isCurrentlyRinging ? 0.12 : 0.03;
+    /* Glow fill under primary wave */
+    ctx.beginPath();
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, 'rgba(232,144,64,0.06)');
+    grad.addColorStop(0.5, 'rgba(34,211,183,0.04)');
+    grad.addColorStop(1, 'rgba(144,112,240,0.06)');
+    ctx.fillStyle = grad;
+    for (let x = 0; x <= w; x++) {
+      const y = h / 2 + Math.sin(x * 0.022 + t * 0.045 * 60) * h * 0.32 * Math.sin(x * 0.006 + t * 0.015);
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, h);
+    ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fill();
+
+    /* Center line */
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(128,128,128,${centerAlpha})`;
+    ctx.lineWidth = 0.5;
+    ctx.moveTo(0, h / 2);
+    ctx.lineTo(w, h / 2);
+    ctx.stroke();
+
+    t += 0.016;
     vizAnimId = requestAnimationFrame(draw);
   }
   draw();
 }
 
 /* ================================================================
-   CLOCK
+   THEME TOGGLE
+   ================================================================ */
+function initTheme() {
+  if (localStorage.getItem('uw_light') === 'true') {
+    document.body.classList.add('light');
+    $('themeBtn').innerHTML = '<i class="fa-solid fa-sun"></i>';
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('uw_light', isLight);
+  $('themeBtn').innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+}
+
+/* ================================================================
+   CLOCK & GREETING
    ================================================================ */
 function updateClock() {
   const d = new Date();
@@ -935,629 +996,553 @@ function updateClock() {
   $('clock').innerHTML = `${h}<span class="c">:</span>${m}<span class="c">:</span><span class="s">${s}</span>`;
 }
 
-/* ================================================================
-   THEME
-   ================================================================ */
-function initTheme() {
-  const saved = localStorage.getItem('uw-theme');
-  if (saved === 'light') document.body.classList.add('light');
-  updateThemeIcon();
+function updateGreeting() {
+  const h = new Date().getHours();
+  let g = "Good Evening";
+  if (h < 12) g = "Good Morning";
+  else if (h < 17) g = "Good Afternoon";
+  $('wGreet').textContent = `${g}, ${currentUser || 'Admin'}`;
+
+  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  $('wDate').textContent = new Date().toLocaleDateString('en-US', opts);
+  $('wDayLabel').textContent = todayName();
 }
 
-function toggleTheme() {
-  document.body.classList.toggle('light');
-  const isLight = document.body.classList.contains('light');
-  localStorage.setItem('uw-theme', isLight ? 'light' : 'dark');
-  updateThemeIcon();
-}
-
-function updateThemeIcon() {
-  const isLight = document.body.classList.contains('light');
-  $('themeBtn').innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+function checkDST() {
+  if (isDST()) {
+    $('dstBadge').classList.add('on');
+    $('dstBadge').textContent = getTZAbbr();
+  } else {
+    $('dstBadge').classList.remove('on');
+  }
 }
 
 /* ================================================================
    AUTHENTICATION
    ================================================================ */
-function handleLogin(e) {
-  e.preventDefault();
-  const username = $('uN').value.trim();
-  const password = $('uP').value;
-
-  if (!username || !password) {
-    toast("Please enter both username and password", "er");
-    return;
-  }
-
-  $('lTxt').textContent = "Signing in...";
-  $('lSpin').style.display = 'inline-block';
-  $('loginBtn').disabled = true;
-
-  /* Simulate network delay */
-  setTimeout(() => {
-    const admin = ADMINS.find(a => a.id.toLowerCase() === username.toLowerCase() && a.password === password);
-    if (admin) {
-      currentUser = admin.id;
-      localStorage.setItem('uw-user', currentUser);
-      toast(`Welcome back, ${currentUser}!`, "ok");
-      showDashboard();
-    } else {
-      toast("Invalid credentials. Access denied.", "er");
-      $('loginCard').classList.add('shake');
-      setTimeout(() => $('loginCard').classList.remove('shake'), 500);
-    }
-    $('lTxt').textContent = "Sign In";
-    $('lSpin').style.display = 'none';
-    $('loginBtn').disabled = false;
-  }, 800);
-}
-
-function handleLogout() {
-  currentUser = null;
-  localStorage.removeItem('uw-user');
-  if (scheduleListener) {
-    db.ref('schedule').off('value', scheduleListener);
-    scheduleListener = null;
-  }
-  schedule = {};
-  rangSet.clear();
-  activityLog = [];
-  $('dashPage').classList.remove('vis');
+function showLogin() {
   $('loginPage').style.display = 'flex';
+  $('dashPage').classList.remove('vis');
   $('logoutBtn').classList.remove('vis');
   $('uN').value = '';
   $('uP').value = '';
-  toast("Logged out successfully", "in");
 }
 
 function showDashboard() {
   $('loginPage').style.display = 'none';
   $('dashPage').classList.add('vis');
   $('logoutBtn').classList.add('vis');
-  selectedDay = todayName();
-  initScheduleListener();
-  renderAll();
+  updateGreeting();
+  initDashboard();
 }
 
-/* ================================================================
-   FIREBASE SCHEDULE LISTENER
-   ================================================================ */
-function initScheduleListener() {
-  if (scheduleListener) {
-    db.ref('schedule').off('value', scheduleListener);
+ $('loginForm').onsubmit = async e => {
+  e.preventDefault();
+  const uid = $('uN').value.trim();
+  const pwd = $('uP').value;
+
+  $('lTxt').style.display = 'none';
+  $('lSpin').style.display = 'inline-block';
+  $('loginBtn').disabled = true;
+
+  await new Promise(r => setTimeout(r, 700));
+
+  if (ADMINS.some(a => a.id === uid && a.password === pwd)) {
+    currentUser = uid;
+    sessionStorage.setItem('uw_user', uid);
+    toast(`Welcome back, ${uid}`, 'ok');
+    setTimeout(showDashboard, 500);
+  } else {
+    toast('Invalid username or password', 'er');
+    $('loginCard').classList.add('shake');
+    setTimeout(() => $('loginCard').classList.remove('shake'), 480);
   }
 
-  scheduleListener = db.ref('schedule').on('value', snap => {
+  $('lTxt').style.display = 'inline';
+  $('lSpin').style.display = 'none';
+  $('loginBtn').disabled = false;
+};
+
+ $('logoutBtn').onclick = () => {
+  sessionStorage.removeItem('uw_user');
+  currentUser = null;
+  toast('Logged out successfully', 'in');
+  showLogin();
+};
+
+/* ================================================================
+   DASHBOARD INITIALIZATION
+   ================================================================ */
+function initDashboard() {
+  selectedDay = todayName();
+  buildDayTabs();
+  loadSchedule();
+  initViz();
+  checkDST();
+
+  /* Listen for real-time Firebase changes */
+  db.ref('BellScheduler').on('value', snap => {
     schedule = snap.val() || {};
-    /* Ensure all days exist in schedule object */
-    DAYS.forEach(d => {
-      if (!schedule[d]) schedule[d] = {};
-    });
+    DAYS.forEach(d => { if (!schedule[d]) schedule[d] = {}; });
     renderAll();
   }, err => {
-    console.error("Firebase read error:", err);
-    toast("Connection error. Retrying...", "er");
+    console.warn('Firebase listener error:', err);
   });
 }
 
 /* ================================================================
-   FIREBASE WRITE OPERATIONS
+   DAY TABS
    ================================================================ */
-function saveBellToFirebase(day, slot, bellData) {
-  return db.ref(`schedule/${day}/${slot}`).set(bellData)
-    .then(() => {
-      addLog(`Bell saved: ${day} Slot ${slot} at ${bellData.time}`, "add");
-      toast(`Bell scheduled for ${to12h(bellData.time)}`, "ok");
-    })
-    .catch(err => {
-      console.error("Save error:", err);
-      toast("Failed to save bell", "er");
-    });
-}
+function buildDayTabs() {
+  const td = todayName();
+  $('dayTabs').innerHTML = DAYS.map(d => {
+    const isToday = d === td;
+    return `<button class="dt${d === selectedDay ? ' on' : ''}" data-d="${d}">${DAY_SHORT[DAYS.indexOf(d)]}${isToday ? '<span class="td"></span>' : ''}</button>`;
+  }).join('');
 
-function deleteBellFromFirebase(day, slot) {
-  return db.ref(`schedule/${day}/${slot}`).remove()
-    .then(() => {
-      addLog(`Bell deleted: ${day} Slot ${slot}`, "del");
-      toast("Bell removed", "ok");
-    })
-    .catch(err => {
-      console.error("Delete error:", err);
-      toast("Failed to delete bell", "er");
-    });
-}
-
-function deleteAllBellsForDay(day) {
-  return db.ref(`schedule/${day}`).remove()
-    .then(() => {
-      addLog(`All bells deleted for ${day}`, "del");
-      toast(`All bells cleared for ${day}`, "ok");
-    })
-    .catch(err => {
-      console.error("Delete all error:", err);
-      toast("Failed to delete bells", "er");
-    });
-}
-
-function deleteAllBellsAllDays() {
-  return db.ref('schedule').remove()
-    .then(() => {
-      addLog("All bells deleted (all days)", "del");
-      toast("All bells cleared across all days", "ok");
-    })
-    .catch(err => {
-      console.error("Delete all error:", err);
-      toast("Failed to delete all bells", "er");
-    });
-}
-
-function copyDaySchedule(fromDay, toDay) {
-  const sourceData = schedule[fromDay] || {};
-  /* Deep clone to avoid reference issues */
-  const clone = JSON.parse(JSON.stringify(sourceData));
-  return db.ref(`schedule/${toDay}`).set(clone)
-    .then(() => {
-      addLog(`Schedule copied: ${fromDay} → ${toDay}`, "edit");
-      toast(`${fromDay} schedule copied to ${toDay}`, "ok");
-    })
-    .catch(err => {
-      console.error("Copy error:", err);
-      toast("Failed to copy schedule", "er");
-    });
+  $$('.dt').forEach(btn => {
+    btn.onclick = () => {
+      selectedDay = btn.dataset.d;
+      $$('.dt').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      renderSchedule();
+      renderTimeline();
+      renderStats();
+    };
+  });
 }
 
 /* ================================================================
-   RENDERING
+   LOAD SCHEDULE FROM FIREBASE
    ================================================================ */
+function loadSchedule() {
+  db.ref('BellScheduler').once('value').then(snap => {
+    schedule = snap.val() || {};
+    DAYS.forEach(d => { if (!schedule[d]) schedule[d] = {}; });
+    renderAll();
+    toast('Schedule synced', 'ok');
+  }).catch(err => {
+    console.warn('Initial load error:', err);
+    DAYS.forEach(d => { if (!schedule[d]) schedule[d] = {}; });
+    renderAll();
+    toast('Using cached data', 'er');
+  });
+}
+
 function renderAll() {
-  renderDayTabs();
-  renderBellList();
   renderStats();
-  renderWelcome();
+  renderSchedule();
   renderTimeline();
+  updateGreeting();
+  checkDST();
 }
 
-function renderDayTabs() {
-  const container = $('dayTabs');
-  const today = todayName();
-  const now = now24();
+/* ================================================================
+   STATS
+   ================================================================ */
+function renderStats() {
+  let total = 0;
+  DAYS.forEach(d => total += getActiveBells(d).length);
+  $('sTotal').textContent = total;
 
-  container.innerHTML = DAYS.map((d, i) => {
-    const isOn = d === selectedDay;
-    const bells = getActiveBells(d);
-    const hasBells = bells.length > 0;
-    const isToday = d === today;
-    /* Check if any bell is currently ringing on this day */
-    const ringingNow = isToday && bells.some(b => {
-      const b24 = b.time24;
-      return b24 <= now && now <= b24;
-    });
+  const todayBells = getActiveBells(todayName());
+  $('sToday').textContent = todayBells.length;
 
-    return `<button class="dt${isOn ? ' on' : ''}" data-day="${d}" onclick="selectDay('${d}')">${DAY_SHORT[i]}${isToday ? '<br><span style="font-size:.55rem;opacity:.7">Today</span>' : ''}${hasBells ? '<span class="td"></span>' : ''}</button>`;
-  }).join('');
+  const cur = now24();
+  const passed = todayBells.filter(b => b.time24 <= cur).length;
+  $('sPassed').textContent = passed;
+
+  const used = getActiveBells(selectedDay).length;
+  $('sSlots').textContent = `${used}/${MAX_SLOTS}`;
+
+  updateCountdown();
 }
 
-function selectDay(day) {
-  selectedDay = day;
-  renderAll();
-}
+function updateCountdown() {
+  const td = todayName();
+  const bells = getActiveBells(td);
+  const cur = now24();
 
-function renderBellList() {
-  const container = $('bellList');
-  const bells = getActiveBells(selectedDay);
-  const now = now24();
-  const today = todayName();
-  const isToday = selectedDay === today;
-
-  let html = '';
-
-  /* Add bell card */
-  const emptySlot = findEmptySlot(selectedDay);
-  if (emptySlot > 0) {
-    html += `<div class="add-c" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add Bell (Slot ${emptySlot})</div>`;
-  } else {
-    html += `<div style="padding:8px;text-align:center;font-size:.78rem;color:var(--muted);opacity:.6">All ${MAX_SLOTS} slots are full</div>`;
+  if (selectedDay !== td) {
+    $('wCountdown').textContent = '--:--';
+    $('wNext').textContent = 'Switch to today';
+    $('wNextTime').textContent = '';
+    return;
   }
 
-  if (bells.length === 0) {
-    html += `<div class="empty"><i class="fa-solid fa-bell-slash"></i><p>No bells scheduled for ${selectedDay}</p></div>`;
+  const upcoming = bells.filter(b => b.time24 > cur);
+  if (upcoming.length > 0) {
+    const s = secUntil(upcoming[0].time24);
+    $('wCountdown').textContent = fmtCountdown(s);
+    $('wNext').textContent = 'Next Bell';
+    $('wNextTime').textContent = upcoming[0].time + (upcoming[0].label ? ` — ${upcoming[0].label}` : '');
   } else {
-    bells.forEach((b, idx) => {
-      const t12 = to12h(b.time);
-      const isPast = isToday && b.time24 < now;
-      const isNow = isToday && b.time24 <= now && now <= b.time24;
-      const isUpcoming = isToday && !isPast && !isNow;
-      const isRinging = rangSet.has(`${selectedDay}-${b.slot}-${b.time24}`);
+    $('wCountdown').textContent = 'Done';
+    $('wNext').textContent = 'No more bells';
+    $('wNextTime').textContent = '';
+  }
+}
 
-      let statusClass = isPast ? 'ps' : (isNow || isRinging ? 'now' : 'up');
-      let statusText = isPast ? 'Passed' : (isNow || isRinging ? 'Ringing' : (isUpcoming ? 'Upcoming' : 'Scheduled'));
+/* ================================================================
+   SCHEDULE RENDERING
+   ================================================================ */
+function renderSchedule() {
+  const bells = getActiveBells(selectedDay);
+  const td = todayName();
+  const cur = now24();
+  const isToday = selectedDay === td;
 
-      const ringingClass = isRinging ? ' ringing' : '';
+  $('bellCnt').textContent = bells.length;
+  updateCountdown();
 
-      html += `<div class="bi${ringingClass}">
-        <div class="bi-n">${idx + 1}</div>
-        <div class="bi-t">${t12}</div>
-        <div class="bi-d">${b.label ? '<strong>' + escapeHtml(b.label) + '</strong>' : 'Bell ' + b.slot} &middot; ${b.duration}s</div>
+  let html = '';
+  if (bells.length < MAX_SLOTS) {
+    html += `<div class="add-c" id="addCard"><i class="fa-solid fa-plus"></i> Add New Bell</div>`;
+  }
+
+  if (!bells.length) {
+    html += `<div class="empty"><i class="fa-regular fa-bell-slash"></i><p>No bells scheduled for ${selectedDay}</p></div>`;
+  } else {
+    bells.forEach((b, i) => {
+      let statusClass = 'sc', statusText = 'Scheduled';
+      if (isToday) {
+        if (b.time24 > cur) { statusClass = 'up'; statusText = 'Upcoming'; }
+        else if (b.time24 === cur) { statusClass = 'now'; statusText = 'Ringing'; }
+        else { statusClass = 'ps'; statusText = 'Passed'; }
+      }
+
+      const isRinging = isToday && b.time24 === cur;
+      const labelHtml = b.label ? `<br><strong style="font-size:.7rem;color:var(--accent)">${escapeHtml(b.label)}</strong>` : '';
+
+      html += `<div class="bi${isRinging ? ' ringing' : ''}" style="animation-delay:${i * 40}ms">
+        <div class="bi-n">${i + 1}</div>
+        <div class="bi-t">${b.time}${labelHtml}</div>
+        <div class="bi-d"><strong>${b.duration}s</strong> ring &middot; Slot ${b.slot}</div>
         <span class="bi-s ${statusClass}">${statusText}</span>
         <div class="bi-a">
-          <button class="bi-b pv" onclick="playBell(${b.duration})" title="Preview"><i class="fa-solid fa-play"></i></button>
-          <button class="bi-b ed" onclick="openEditModal('${selectedDay}',${b.slot})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-          <button class="bi-b dl" onclick="handleDeleteBell('${selectedDay}',${b.slot})" title="Delete"><i class="fa-solid fa-trash"></i></button>
+          <button class="bi-b pv" data-dur="${b.duration}" title="Preview sound"><i class="fa-solid fa-volume-high"></i></button>
+          <button class="bi-b ed" data-slot="${b.slot}" title="Edit bell"><i class="fa-solid fa-pen"></i></button>
+          <button class="bi-b dl" data-slot="${b.slot}" title="Disable bell"><i class="fa-solid fa-trash-can"></i></button>
         </div>
       </div>`;
     });
   }
 
-  container.innerHTML = html;
-  $('bellCnt').textContent = bells.length;
-}
+  $('bellList').innerHTML = html;
 
-function renderStats() {
-  let totalActive = 0;
-  let todayBells = 0;
-  let passedToday = 0;
-  let totalSlots = 0;
-  const now = now24();
-  const today = todayName();
+  /* Bind events */
+  const addCard = $('addCard');
+  if (addCard) addCard.onclick = openAddModal;
 
-  DAYS.forEach(d => {
-    const bells = getActiveBells(d);
-    totalActive += bells.length;
-    totalSlots += bells.length;
-    if (d === today) {
-      todayBells = bells.length;
-      passedToday = bells.filter(b => b.time24 < now).length;
-    }
+  $$('.bi-b.pv').forEach(btn => {
+    btn.onclick = () => playBell(+btn.dataset.dur);
   });
 
-  $('sTotal').textContent = totalActive;
-  $('sToday').textContent = todayBells;
-  $('sPassed').textContent = passedToday;
-  $('sSlots').textContent = `${totalSlots}/${MAX_SLOTS * 7}`;
-}
-
-function renderWelcome() {
-  const d = new Date();
-  const h = d.getHours();
-  let greet = "Good Evening";
-  if (h < 12) greet = "Good Morning";
-  else if (h < 17) greet = "Good Afternoon";
-
-  $('wGreet').textContent = `${greet}, ${currentUser || 'Admin'}`;
-
-  const dateStr = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  $('wDate').textContent = dateStr;
-  $('wDayLabel').textContent = todayName();
-
-  /* Next bell countdown */
-  const todayBells = getActiveBells(todayName());
-  const now = now24();
-  const upcoming = todayBells.filter(b => b.time24 > now);
-
-  if (upcoming.length > 0) {
-    const next = upcoming[0];
-    const secs = secUntil(next.time24);
-    $('wCountdown').textContent = fmtCountdown(secs);
-    $('wNext').textContent = 'Next Bell';
-    $('wNextTime').textContent = to12h(next.time) + (next.label ? ` - ${next.label}` : '');
-  } else {
-    $('wCountdown').textContent = '--:--';
-    $('wNext').textContent = todayBells.length > 0 ? 'All bells passed' : 'No bells today';
-    $('wNextTime').textContent = '';
-  }
-}
-
-function renderTimeline() {
-  const bells = getActiveBells(selectedDay);
-  const section = $('tlSection');
-
-  if (bells.length === 0) {
-    section.style.display = 'none';
-    return;
-  }
-  section.style.display = 'block';
-
-  const now = now24();
-  const isToday = selectedDay === todayName();
-  const [nh, nm] = now.split(":").map(Number);
-  const nowMins = nh * 60 + nm;
-  const dayMins = 24 * 60;
-  const pct = isToday ? (nowMins / dayMins) * 100 : 0;
-
-  $('tlProg').style.width = pct + '%';
-  $('tlMk').style.left = pct + '%';
-
-  /* Bell dots on timeline */
-  let dotsHtml = '';
-  bells.forEach(b => {
-    const [bh, bm] = b.time24.split(":").map(Number);
-    const bellMins = bh * 60 + bm;
-    const bellPct = (bellMins / dayMins) * 100;
-    const isPast = isToday && b.time24 < now;
-    dotsHtml += `<div class="tl-d${isPast ? ' ps' : ''}" style="left:${bellPct}%"></div>`;
+  $$('.bi-b.ed').forEach(btn => {
+    btn.onclick = () => openEditModal(selectedDay, +btn.dataset.slot);
   });
-  $('tlDots').innerHTML = dotsHtml;
+
+  $$('.bi-b.dl').forEach(btn => {
+    btn.onclick = async () => {
+      const slot = +btn.dataset.slot;
+      if (await showConfirm(`Disable Bell ${slot} on ${selectedDay}? This will clear its time and duration.`)) {
+        disableBell(selectedDay, slot);
+      }
+    };
+  });
+
+  renderStats();
 }
 
 /* ================================================================
-   BELL MODAL (ADD / EDIT)
+   TIMELINE
    ================================================================ */
-function openAddModal() {
-  const slot = findEmptySlot(selectedDay);
-  if (slot < 0) {
-    toast("All slots are full for this day", "er");
+function renderTimeline() {
+  const bells = getActiveBells(selectedDay);
+  if (!bells.length) {
+    $('tlSection').style.display = 'none';
     return;
   }
 
-  $('mTitle').textContent = 'Add Bell';
-  $('mTime').value = '';
+  $('tlSection').style.display = 'block';
+  const td = todayName();
+  const isToday = selectedDay === td;
+  const now = new Date();
+  const dayProgress = isToday ? ((now.getHours() * 3600 + now.getMinutes() * 60) / 86400) * 100 : 0;
+
+  $('tlProg').style.width = dayProgress + '%';
+  $('tlMk').style.left = dayProgress + '%';
+
+  const cur = now24();
+  $('tlDots').innerHTML = bells.map(b => {
+    const [h, m] = b.time24.split(":").map(Number);
+    const pct = ((h * 3600 + m * 60) / 86400) * 100;
+    const isPast = isToday && b.time24 <= cur;
+    return `<div class="tl-d${isPast ? ' ps' : ''}" style="left:${pct}%" title="${b.time}${b.label ? ' — ' + b.label : ''}"></div>`;
+  }).join('');
+}
+
+/* ================================================================
+   MODAL MANAGEMENT
+   ================================================================ */
+function openAddModal() {
+  $('mTitle').textContent = `Add Bell — ${selectedDay}`;
+  $('mTime').value = '09:00';
   $('mLabel').value = '';
-  $('mSlider').value = 3;
+  $('mSlider').value = $('mDur').value = 3;
   $('slVal').textContent = '3';
   $('mDay').value = selectedDay;
-  $('mSlot').value = slot;
+  $('mSlot').value = '';
   $('mEdit').value = '0';
+  $('mDisable').style.display = 'none';
   $('bellModal').classList.add('open');
   setTimeout(() => $('mTime').focus(), 100);
 }
 
 function openEditModal(day, slot) {
-  const bellData = schedule[day] && schedule[day][slot];
-  if (!bellData) {
-    toast("Bell data not found", "er");
-    return;
-  }
+  const b = (schedule[day] && schedule[day][String(slot)]) || {};
+  const timeVal = b.time ? to24h(b.time) : '09:00';
+  const durVal = b.duration || 3;
+  const labelVal = b.label || '';
 
-  $('mTitle').textContent = 'Edit Bell';
-  /* Convert time to 24h for the time input */
-  const t24 = to24h(bellData.time);
-  $('mTime').value = t24;
-  $('mLabel').value = bellData.label || '';
-  $('mSlider').value = bellData.duration || 3;
-  $('slVal').textContent = bellData.duration || 3;
+  $('mTitle').textContent = `Edit Bell ${slot} — ${day}`;
+  $('mTime').value = timeVal;
+  $('mLabel').value = labelVal;
+  $('mSlider').value = $('mDur').value = durVal;
+  $('slVal').textContent = durVal;
   $('mDay').value = day;
   $('mSlot').value = slot;
   $('mEdit').value = '1';
+  $('mDisable').style.display = 'flex';
   $('bellModal').classList.add('open');
   setTimeout(() => $('mTime').focus(), 100);
 }
 
-function closeBellModal() {
+function closeModal() {
   $('bellModal').classList.remove('open');
 }
 
-function handleBellFormSubmit(e) {
-  e.preventDefault();
+ $('mClose').onclick = closeModal;
+ $('mCancel').onclick = closeModal;
+ $('bellModal').onclick = e => { if (e.target === $('bellModal')) closeModal(); };
 
-  const time = $('mTime').value;
-  const label = $('mLabel').value.trim();
-  const duration = parseInt($('mSlider').value) || 3;
+/* Slider ↔ Number input sync */
+ $('mSlider').oninput = e => {
+  $('mDur').value = $('slVal').textContent = e.target.value;
+};
+ $('mDur').oninput = e => {
+  const v = Math.min(60, Math.max(1, +e.target.value || 1));
+  $('mSlider').value = $('slVal').textContent = v;
+};
+
+/* Disable button in modal */
+ $('mDisable').onclick = async () => {
   const day = $('mDay').value;
-  const slot = parseInt($('mSlot').value);
+  const slot = $('mSlot').value;
+  closeModal();
+  if (await showConfirm(`Disable Bell ${slot} on ${day}?`)) {
+    disableBell(day, +slot);
+  }
+};
+
+/* Form submit */
+ $('bellForm').onsubmit = e => {
+  e.preventDefault();
+  const time = $('mTime').value;
+  const dur = +$('mDur').value;
+  const label = $('mLabel').value.trim();
+  const day = $('mDay').value;
   const isEdit = $('mEdit').value === '1';
 
-  if (!time) {
-    toast("Please select a bell time", "er");
-    return;
-  }
+  if (!time) { toast('Please select a time', 'er'); return; }
+  if (!dur || dur < 1) { toast('Duration must be at least 1 second', 'er'); return; }
 
-  /* Convert 24h time from input to 12h for storage (matches Firebase format) */
   const time12 = to12h(time);
 
-  const bellData = {
-    time: time12,
-    duration: duration,
-    label: label
-  };
+  if (isEdit) {
+    saveBell(day, +$('mSlot').value, { time: time12, duration: dur, label });
+  } else {
+    const slot = findEmptySlot(day);
+    if (slot === -1) { toast('All 15 slots are full for ' + day, 'er'); return; }
+    saveBell(day, slot, { time: time12, duration: dur, label });
+  }
+  closeModal();
+};
 
-  saveBellToFirebase(day, slot, bellData).then(() => {
-    closeBellModal();
-  });
+/* ================================================================
+   CRUD OPERATIONS
+   ================================================================ */
+function saveBell(day, slot, data) {
+  if (!schedule[day]) schedule[day] = {};
+  schedule[day][String(slot)] = data;
+
+  const labelStr = data.label ? ` (${data.label})` : '';
+  addLog(`${data.time}${labelStr} → ${day} Slot ${slot}`, 'add');
+
+  db.ref(`BellScheduler/${day}/${slot}`).set(data)
+    .then(() => toast(`Bell ${slot} saved successfully`, 'ok'))
+    .catch(err => {
+      toast('Failed to save to Firebase', 'er');
+      console.error(err);
+    });
 }
 
-function handleDeleteBell(day, slot) {
-  const bellData = schedule[day] && schedule[day][slot];
-  const timeStr = bellData ? to12h(bellData.time) : 'this bell';
-  showConfirm(`Delete bell at ${timeStr} from ${day}?`).then(ok => {
-    if (ok) deleteBellFromFirebase(day, slot);
-  });
+function disableBell(day, slot) {
+  if (!schedule[day]) schedule[day] = {};
+  const old = schedule[day][String(slot)];
+  const labelStr = old && old.label ? ` (${old.label})` : '';
+  schedule[day][String(slot)] = { time: "", duration: 0, label: "" };
+
+  addLog(`Bell ${slot} disabled on ${day}${labelStr}`, 'del');
+
+  db.ref(`BellScheduler/${day}/${slot}`).set({ time: "", duration: 0, label: "" })
+    .then(() => toast(`Bell ${slot} disabled`, 'in'))
+    .catch(err => {
+      toast('Failed to update Firebase', 'er');
+      console.error(err);
+    });
 }
 
 /* ================================================================
-   DELETE ALL BELLS
+   COPY DAY
    ================================================================ */
-function handleDeleteAllDay() {
-  const bells = getActiveBells(selectedDay);
-  if (bells.length === 0) {
-    toast(`No bells to delete for ${selectedDay}`, "in");
-    return;
-  }
-  showConfirm(`Delete all ${bells.length} bells for ${selectedDay}? This cannot be undone.`).then(ok => {
-    if (ok) deleteAllBellsForDay(selectedDay);
-  });
-}
+async function copyDay() {
+  const from = selectedDay;
+  const others = DAYS.filter(d => d !== from);
+  const names = others.map((d, i) => `${i + 1}. ${d}`).join('\n');
 
-function handleDeleteAllGlobal() {
-  let total = 0;
-  DAYS.forEach(d => { total += getActiveBells(d).length; });
-  if (total === 0) {
-    toast("No bells to delete", "in");
-    return;
-  }
-  showConfirm(`Delete ALL ${total} bells across all days? This cannot be undone.`).then(ok => {
-    if (ok) deleteAllBellsAllDays();
-  });
-}
+  /* Custom inline prompt replacement */
+  const target = prompt(`Copy ${from}'s schedule to which day?\n\n${names}\n\nType the day name:`);
+  if (!target) return;
 
-/* ================================================================
-   COPY DAY MODAL
-   ================================================================ */
-function openCopyModal() {
-  /* Populate dropdowns */
-  const fromSel = $('copyFrom');
-  const toSel = $('copyTo');
+  const trimmed = target.trim();
+  if (!DAYS.includes(trimmed)) { toast('Invalid day name', 'er'); return; }
 
-  fromSel.innerHTML = DAYS.map(d => `<option value="${d}"${d === selectedDay ? ' selected' : ''}>${d}</option>`).join('');
-  toSel.innerHTML = DAYS.map(d => {
-    /* Default target: next day or different from source */
-    const nextDay = DAYS[(DAYS.indexOf(selectedDay) + 1) % 7];
-    return `<option value="${d}"${d === nextDay ? ' selected' : ''}>${d}</option>`;
-  }).join('');
+  const bells = getActiveBells(from);
+  if (!bells.length) { toast('No active bells to copy', 'er'); return; }
 
-  $('copyModal').classList.add('open');
-}
+  if (!await showConfirm(`Copy ${bells.length} bells from ${from} to ${trimmed}?\nThis will replace ${trimmed}'s entire schedule.`)) return;
 
-function closeCopyModal() {
-  $('copyModal').classList.remove('open');
-}
+  if (!schedule[trimmed]) schedule[trimmed] = {};
 
-function handleCopyConfirm() {
-  const from = $('copyFrom').value;
-  const to = $('copyTo').value;
-
-  if (from === to) {
-    toast("Source and target days must be different", "er");
-    return;
+  /* Clear target */
+  for (let i = 1; i <= MAX_SLOTS; i++) {
+    schedule[trimmed][String(i)] = { time: "", duration: 0, label: "" };
   }
 
-  const sourceBells = getActiveBells(from);
-  if (sourceBells.length === 0) {
-    toast(`No bells found on ${from} to copy`, "er");
-    return;
-  }
-
-  showConfirm(`Copy ${sourceBells.length} bells from ${from} to ${to}? This will replace all existing bells on ${to}.`).then(ok => {
-    if (ok) {
-      copyDaySchedule(from, to).then(() => {
-        closeCopyModal();
-        /* Switch to target day to show the result */
-        selectedDay = to;
-        renderAll();
-      });
+  /* Copy bells */
+  bells.forEach((b, i) => {
+    if (i < MAX_SLOTS) {
+      schedule[trimmed][String(i + 1)] = { time: b.time, duration: b.duration, label: b.label };
     }
   });
+
+  addLog(`Copied ${bells.length} bells: ${from} → ${trimmed}`, 'edit');
+
+  /* Batch update Firebase */
+  const updates = {};
+  for (let i = 1; i <= MAX_SLOTS; i++) {
+    updates[`${trimmed}/${i}`] = schedule[trimmed][String(i)];
+  }
+  db.ref('BellScheduler').update(updates)
+    .then(() => toast(`Schedule copied to ${trimmed}`, 'ok'))
+    .catch(err => toast('Copy failed', 'er'));
 }
 
 /* ================================================================
-   BELL RINGING CHECKER
+   AUTO-RING CHECKER
    ================================================================ */
-function checkBells() {
-  const today = todayName();
-  const now = now24();
-  const bells = getActiveBells(today);
+function checkAutoRing() {
+  const td = todayName();
+  const bells = getActiveBells(td);
+  if (!bells.length) return;
+
+  const cur = now24();
+  const sec = new Date().getSeconds();
 
   bells.forEach(b => {
-    const key = `${today}-${b.slot}-${b.time24}`;
-    /* Check if current time matches bell time (within same minute) */
-    if (b.time24 === now && !rangSet.has(key)) {
+    const key = `${td}-${b.slot}-${b.time24}`;
+    if (b.time24 === cur && sec === 0 && !rangSet.has(key)) {
       rangSet.add(key);
       playBell(b.duration);
-      addLog(`Bell rang: ${to12h(b.time)} (${b.label || 'Bell ' + b.slot})`, "ring");
-      toast(`Bell ringing: ${to12h(b.time)}${b.label ? ' - ' + b.label : ''}`, "ok");
+      const labelStr = b.label ? ` (${b.label})` : '';
+      toast(`Bell ringing: ${b.time}${labelStr} — ${b.duration}s`, 'ok');
+      addLog(`Bell rang: ${b.time}${labelStr}`, 'ring');
+      renderSchedule();
+    }
+    if (b.time24 !== cur && rangSet.has(key)) {
+      rangSet.delete(key);
     }
   });
-
-  /* Reset rang set at midnight */
-  if (now === "00:00") {
-    rangSet.clear();
-  }
 }
 
 /* ================================================================
-   MAIN CLOCK & COUNTDOWN TICKER
+   QUICK ACTIONS
    ================================================================ */
-function tick() {
-  updateClock();
-  renderWelcome();
+ $('qaAdd').onclick = openAddModal;
+ $('qaTest').onclick = () => { playBell(5); toast('Playing 5-second test bell', 'in'); };
+ $('qaToday').onclick = () => {
+  selectedDay = todayName();
+  $$('.dt').forEach(b => b.classList.toggle('on', b.dataset.d === selectedDay));
+  renderSchedule();
   renderTimeline();
-  checkBells();
-  /* Re-render bell list every 30 seconds to update statuses */
-  renderBellList();
-}
+  renderStats();
+  toast('Jumped to today\'s schedule', 'in');
+};
+ $('qaCopy').onclick = copyDay;
 
 /* ================================================================
-   EVENT HANDLERS
+   KEYBOARD SHORTCUTS
    ================================================================ */
-function bindEvents() {
-  /* Login */
-  $('loginForm').addEventListener('submit', handleLogin);
+document.onkeydown = e => {
+  if (e.key === 'Escape') {
+    if ($('cfmBg').classList.contains('open')) closeConfirm(false);
+    else if ($('bellModal').classList.contains('open')) closeModal();
+  }
+};
 
-  /* Logout */
-  $('logoutBtn').addEventListener('click', handleLogout);
+/* ================================================================
+   PERIODIC TICKERS
+   ================================================================ */
+function startTickers() {
+  setInterval(updateClock, 1000);
+  setInterval(updateCountdown, 1000);
+  setInterval(checkAutoRing, 1000);
 
-  /* Theme */
-  $('themeBtn').addEventListener('click', toggleTheme);
-
-  /* Bell Modal */
-  $('mClose').addEventListener('click', closeBellModal);
-  $('mCancel').addEventListener('click', closeBellModal);
-  $('bellModal').addEventListener('click', e => { if (e.target === $('bellModal')) closeBellModal(); });
-  $('bellForm').addEventListener('submit', handleBellFormSubmit);
-
-  /* Slider sync */
-  $('mSlider').addEventListener('input', function() {
-    $('slVal').textContent = this.value;
-  });
-
-  /* Copy Day Modal */
-  $('copyClose').addEventListener('click', closeCopyModal);
-  $('copyCancel').addEventListener('click', closeCopyModal);
-  $('copyModal').addEventListener('click', e => { if (e.target === $('copyModal')) closeCopyModal(); });
-  $('copyConfirm').addEventListener('click', handleCopyConfirm);
-
-  /* Quick Actions */
-  $('qaAdd').addEventListener('click', openAddModal);
-  $('qaTest').addEventListener('click', playTestBell);
-  $('qaToday').addEventListener('click', () => { selectedDay = todayName(); renderAll(); toast(`Switched to ${todayName()}`, "in"); });
-  $('qaCopy').addEventListener('click', openCopyModal);
-  $('qaDelAll').addEventListener('click', handleDeleteAllGlobal);
-
-  /* Delete All (schedule panel header button) */
-  $('delAllBtn').addEventListener('click', handleDeleteAllDay);
-
-  /* Keyboard shortcuts */
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closeBellModal();
-      closeCopyModal();
-      closeConfirm(false);
+  /* Refresh schedule display every 30s (for status changes) */
+  setInterval(() => {
+    if ($('dashPage').classList.contains('vis')) {
+      renderSchedule();
+      renderTimeline();
+      checkDST();
     }
-  });
+  }, 30000);
 }
 
 /* ================================================================
-   INITIALIZATION
+   APPLICATION BOOT
    ================================================================ */
-function init() {
+function boot() {
   initTheme();
-  initBgCanvas();
   initParticles();
-  initViz();
+  initBgCanvas();
   updateClock();
-  bindEvents();
+  startTickers();
+  renderLog();
 
-  /* Check for saved session */
-  const savedUser = localStorage.getItem('uw-user');
+  $('themeBtn').onclick = toggleTheme;
+
+  /* Restore session */
+  const savedUser = sessionStorage.getItem('uw_user');
   if (savedUser) {
     currentUser = savedUser;
     showDashboard();
+  } else {
+    showLogin();
   }
-
-  /* Start tick interval (every 1 second for clock, slower for other updates) */
-  setInterval(tick, 1000);
-
-  /* Slower interval for stats update */
-  setInterval(() => {
-    if (currentUser) renderStats();
-  }, 5000);
 }
 
-/* Run on DOM ready */
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+document.addEventListener('DOMContentLoaded', boot);
 </script>
 </body>
 </html>
