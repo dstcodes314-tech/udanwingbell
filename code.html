@@ -65,7 +65,6 @@
 
     .wrap{position:relative;z-index:1;width:100%;max-width:1120px;margin:0 auto;padding:0 clamp(1rem,3.5vw,2rem)}
 
-    /* HEADER */
     header{background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);padding:.65rem 0;position:sticky;top:0;z-index:100;transition:background .5s}
     .hdr{display:flex;justify-content:space-between;align-items:center}
     .logo{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);letter-spacing:-.2px}
@@ -80,20 +79,16 @@
     .online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green-mid);animation:pulse 2s ease-in-out infinite;flex-shrink:0}
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
     .hdr-sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
-    .hdr-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.88rem;transition:all .25s;flex-shrink:0;position:relative}
+    .hdr-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.88rem;transition:all .25s;flex-shrink:0}
     .hdr-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px var(--accent-dim)}
 
-    /* Mute Button - Special Styling */
     .mute-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.88rem;transition:all .25s;flex-shrink:0;position:relative}
     .mute-btn:hover{transform:translateY(-1px)}
     .mute-btn.unmuted{color:var(--green);border-color:rgba(64,216,154,.3);background:var(--green-dim)}
     .mute-btn.unmuted:hover{box-shadow:0 4px 12px var(--green-mid)}
     .mute-btn.muted{color:var(--red);border-color:rgba(240,96,96,.3);background:var(--red-dim)}
     .mute-btn.muted:hover{box-shadow:0 4px 12px var(--red-mid)}
-    /* Slash line over mute icon when muted */
     .mute-btn.muted::after{content:'';position:absolute;width:2px;height:20px;background:var(--red);border-radius:1px;transform:rotate(45deg);pointer-events:none}
-
-    /* Mute indicator badge */
     .mute-badge{position:absolute;top:-6px;right:-6px;font-size:.5rem;font-weight:800;padding:1px 4px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;pointer-events:none;z-index:2}
     .mute-btn.muted .mute-badge{background:var(--red);color:#fff}
     .mute-btn.unmuted .mute-badge{display:none}
@@ -102,7 +97,6 @@
     .logout-btn:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-1px)}
     .logout-btn.vis{display:inline-flex}
 
-    /* LOGIN */
     .login-page{flex:1;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);padding:2rem 1rem}
     .login-card{width:100%;max-width:430px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2.8rem 2.4rem 2.4rem;position:relative;overflow:hidden;animation:cUp .65s cubic-bezier(.16,1,.3,1);box-shadow:var(--shadow)}
     .login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--violet),var(--accent));background-size:200% 100%;animation:gradShift 4s linear infinite}
@@ -135,12 +129,10 @@
     .shake{animation:shk .45s ease}
     @keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 
-    /* DASHBOARD */
     .dash{display:none;flex:1;padding:1.2rem 0 2rem;animation:dFu .55s ease}
     .dash.vis{display:block}
     @keyframes dFu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-    /* Sound Status Bar */
     .sound-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 16px;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .3s}
     .sound-bar.off{border-color:rgba(240,96,96,.2);background:var(--red-dim)}
     .sound-bar-left{display:flex;align-items:center;gap:10px}
@@ -204,22 +196,16 @@
     .dt .td{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-left:2px;vertical-align:middle;box-shadow:0 0 6px var(--accent-glow)}
     .dt.on .td{background:#0A0D12;box-shadow:none}
 
-    /* Bell List - STATIC, no continuous animation */
     .bl{padding:10px 1rem 1rem;max-height:480px;overflow-y:auto}
     .add-c{background:var(--card2);border:2px dashed var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-weight:600;font-size:.84rem;transition:all .3s}
     .add-c:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);transform:translateY(-1px);box-shadow:0 4px 16px var(--accent-dim)}
 
-    /* Bell Item - NO continuous animation, only hover effects */
     .bi{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:11px;transition:border-color .25s,box-shadow .25s;margin-bottom:6px;position:relative;overflow:hidden}
     .bi::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--accent-dim),transparent);opacity:0;transition:opacity .25s}
     .bi:hover{border-color:var(--border2)}
     .bi:hover::before{opacity:1}
-    /* Only the ringing bell gets animation */
     .bi.ringing{border-color:var(--accent);animation:ringPulse 1s ease-in-out infinite}
     @keyframes ringPulse{0%,100%{box-shadow:0 0 0 0 var(--accent-glow)}50%{box-shadow:0 0 0 8px transparent}}
-    /* New bell entry animation - plays ONCE only */
-    .bi.entering{animation:biEnter .4s cubic-bezier(.16,1,.3,1) forwards}
-    @keyframes biEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
     .bi-n{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent-dim),var(--accent-mid));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.73rem;color:var(--accent);flex-shrink:0;position:relative;z-index:1}
     .bi-t{font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;min-width:95px;position:relative;z-index:1}
@@ -287,7 +273,6 @@
     .log-text{color:var(--fg2);line-height:1.3}
     .log-time{color:var(--muted);font-size:.64rem;margin-top:1px}
 
-    /* MODAL */
     .modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem}
     .modal-bg.open{display:flex;animation:mFi .2s ease}
     @keyframes mFi{from{opacity:0}to{opacity:1}}
@@ -319,7 +304,6 @@
     .copy-info{background:var(--accent-dim);border:1px solid rgba(232,144,64,.1);border-radius:10px;padding:10px 14px;margin-top:12px;font-size:.78rem;color:var(--fg2);display:flex;align-items:flex-start;gap:8px}
     .copy-info i{color:var(--accent);margin-top:2px;flex-shrink:0}
 
-    /* CONFIRM */
     .cfm-bg{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:1.5rem}
     .cfm-bg.open{display:flex;animation:mFi .2s ease}
     .cfm-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;width:100%;max-width:380px;text-align:center;animation:mP .35s cubic-bezier(.16,1,.3,1);box-shadow:0 20px 60px rgba(0,0,0,.4)}
@@ -333,7 +317,6 @@
     .cb-y{background:var(--red);color:#fff;box-shadow:0 4px 14px var(--red-mid)}
     .cb-y:hover{opacity:.85;transform:translateY(-1px)}
 
-    /* TOAST */
     .tw{position:fixed;top:70px;right:14px;z-index:700;display:flex;flex-direction:column;gap:8px;pointer-events:none}
     .ts{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:10px;min-width:250px;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:tI .35s cubic-bezier(.16,1,.3,1);backdrop-filter:blur(12px);pointer-events:auto}
     .ts.out{animation:tO .25s ease forwards}
@@ -383,7 +366,6 @@
 <div class="ring-fx" id="ringFx"></div>
 <div class="tw" id="toastWrap"></div>
 
-<!-- Confirm Dialog -->
 <div class="cfm-bg" id="cfmBg">
   <div class="cfm-box">
     <div class="ci"><i class="fa-solid fa-triangle-exclamation"></i></div>
@@ -395,7 +377,6 @@
   </div>
 </div>
 
-<!-- Bell Modal -->
 <div class="modal-bg" id="bellModal">
   <div class="modal-box">
     <div class="mt"><h2 id="mTitle">Add Bell</h2><button class="mx" id="mClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
@@ -409,10 +390,10 @@
         <input type="text" id="mLabel" placeholder="e.g. Period 1 Start" maxlength="30">
       </div>
       <div class="sl-w">
-        <div class="sl-v">Duration: <span id="slVal">3</span> seconds</div>
-        <input type="range" id="mSlider" min="1" max="60" value="3">
+        <div class="sl-v">Duration: <span id="slVal">5</span> seconds</div>
+        <input type="range" id="mSlider" min="1" max="60" value="5">
       </div>
-      <input type="hidden" id="mDay"><input type="hidden" id="mSlot"><input type="hidden" id="mEdit" value="0">
+      <input type="hidden" id="mDay"><input type="hidden" id="mIndex"><input type="hidden" id="mEdit" value="0">
       <div class="mb">
         <button type="button" class="mbtn mbtn-c" id="mCancel">Cancel</button>
         <button type="submit" class="mbtn mbtn-s"><i class="fa-solid fa-check"></i> Save Bell</button>
@@ -421,7 +402,6 @@
   </div>
 </div>
 
-<!-- Copy Day Modal -->
 <div class="modal-bg" id="copyModal">
   <div class="modal-box">
     <div class="mt"><h2>Copy Day Schedule</h2><button class="mx" id="copyClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
@@ -445,7 +425,6 @@
   </div>
 </div>
 
-<!-- Header -->
 <header>
   <div class="wrap hdr">
     <div class="logo">
@@ -463,7 +442,6 @@
   </div>
 </header>
 
-<!-- Login Page -->
 <main class="login-page" id="loginPage">
   <div class="login-card" id="loginCard">
     <div class="lb">
@@ -491,10 +469,8 @@
   </div>
 </main>
 
-<!-- Dashboard -->
 <main class="dash" id="dashPage">
   <div class="wrap">
-    <!-- Sound Status Bar -->
     <div class="sound-bar on" id="soundBar">
       <div class="sound-bar-left">
         <div class="sound-bar-icon" id="soundBarIcon"><i class="fa-solid fa-volume-high"></i></div>
@@ -523,7 +499,7 @@
       <div class="st"><div class="si"><i class="fa-solid fa-bell"></i></div><div class="sv" id="sTotal">0</div><div class="sl">Total Active</div><div class="st-bg"><i class="fa-solid fa-bell"></i></div></div>
       <div class="st"><div class="si"><i class="fa-solid fa-calendar-day"></i></div><div class="sv" id="sToday">0</div><div class="sl">Today's Bells</div><div class="st-bg"><i class="fa-solid fa-calendar-day"></i></div></div>
       <div class="st"><div class="si"><i class="fa-solid fa-circle-check"></i></div><div class="sv" id="sPassed">0</div><div class="sl">Passed Today</div><div class="st-bg"><i class="fa-solid fa-circle-check"></i></div></div>
-      <div class="st"><div class="si"><i class="fa-solid fa-layer-group"></i></div><div class="sv" id="sSlots">0/15</div><div class="sl">Slots Used</div><div class="st-bg"><i class="fa-solid fa-layer-group"></i></div></div>
+      <div class="st"><div class="si"><i class="fa-solid fa-layer-group"></i></div><div class="sv" id="sSlots">0/50</div><div class="sl">Slots Used</div><div class="st-bg"><i class="fa-solid fa-layer-group"></i></div></div>
     </div>
 
     <div class="main-grid">
@@ -593,7 +569,12 @@ const FB_CONFIG = {
   databaseURL: "https://bell-56bba-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
 
-const MAX_SLOTS = 15;
+/* Firebase root path - matches your JSON structure */
+const FB_ROOT = "BellScheduler";
+
+/* MAX BELLS PER DAY - increased from 15 to 50 */
+const MAX_SLOTS = 50;
+
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const DAY_SHORT = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const ADMINS = [
@@ -608,7 +589,7 @@ const ADMINS = [
    ================================================================ */
 let currentUser = null;
 let selectedDay = "";
-let schedule = {};
+let schedule = {};       // Local copy: { Monday: [ {...}, {...} ], Tuesday: [...] }
 let audioCtx = null;
 let rangSet = new Set();
 let confirmResolver = null;
@@ -618,8 +599,8 @@ let bgAnimId = null;
 let isCurrentlyRinging = false;
 let firebaseConnected = false;
 let scheduleListener = null;
-let soundMuted = false;        // Mute state
-let lastRenderedBellHash = ""; // Track bell list changes to avoid unnecessary re-renders
+let soundMuted = false;
+let lastRenderedBellHash = "";
 
 /* ================================================================
    FIREBASE INIT
@@ -701,28 +682,63 @@ function fmtCountdown(s) {
   return parts.join(" ");
 }
 
+/* ================================================================
+   ARRAY-BASED SCHEDULE HELPERS
+   Works with: BellScheduler -> Monday -> [ {time, duration}, ... ]
+   ================================================================ */
+
+/* Normalize a day's data from Firebase into a proper array */
+function normalizeDayArray(dayData) {
+  if (!dayData) return [];
+  /* Firebase may return array or object with numeric keys */
+  if (Array.isArray(dayData)) return dayData;
+  if (typeof dayData === 'object') {
+    const keys = Object.keys(dayData).map(Number).filter(k => !isNaN(k)).sort((a,b) => a - b);
+    if (keys.length === 0) return [];
+    const arr = [];
+    keys.forEach(k => { arr[k] = dayData[String(k)]; });
+    return arr;
+  }
+  return [];
+}
+
+/* Get all active bells for a day as a sorted array of {index, time, time24, duration, label} */
 function getActiveBells(day) {
-  const d = schedule[day];
-  if (!d) return [];
+  const dayArr = normalizeDayArray(schedule[day]);
   const result = [];
-  for (let i = 1; i <= MAX_SLOTS; i++) {
-    const b = d[String(i)];
+  for (let i = 0; i < dayArr.length; i++) {
+    const b = dayArr[i];
     if (b && b.time && b.duration > 0) {
-      result.push({ slot: i, time: b.time, time24: to24h(b.time), duration: b.duration, label: b.label || "" });
+      result.push({
+        index: i,
+        time: b.time,
+        time24: to24h(b.time),
+        duration: b.duration,
+        label: b.label || ""
+      });
     }
   }
   result.sort((a, b) => a.time24.localeCompare(b.time24));
   return result;
 }
 
+/* Find first empty index in a day's array, or the next index at the end */
 function findEmptySlot(day) {
-  const d = schedule[day];
-  if (!d) return 1;
-  for (let i = 1; i <= MAX_SLOTS; i++) {
-    const b = d[String(i)];
+  const dayArr = normalizeDayArray(schedule[day]);
+  /* Check for null/empty slots in existing array */
+  for (let i = 0; i < dayArr.length; i++) {
+    const b = dayArr[i];
     if (!b || !b.time || b.duration <= 0) return i;
   }
+  /* Add at the end if under max */
+  if (dayArr.length < MAX_SLOTS) return dayArr.length;
+  /* All full */
   return -1;
+}
+
+/* Count total bells in a day array */
+function countBellsInDay(day) {
+  return getActiveBells(day).length;
 }
 
 function escapeHtml(str) {
@@ -855,13 +871,8 @@ function toggleMute() {
   soundMuted = !soundMuted;
   localStorage.setItem('uw-muted', soundMuted ? 'true' : 'false');
   updateMuteUI();
-  if (soundMuted) {
-    toast("Web bell sound muted", "in");
-    addLog("Sound muted", "edit");
-  } else {
-    toast("Web bell sound enabled", "ok");
-    addLog("Sound enabled", "edit");
-  }
+  if (soundMuted) { toast("Web bell sound muted", "in"); addLog("Sound muted", "edit"); }
+  else { toast("Web bell sound enabled", "ok"); addLog("Sound enabled", "edit"); }
 }
 
 function updateMuteUI() {
@@ -872,34 +883,28 @@ function updateMuteUI() {
   const toggle = $('soundToggle');
 
   if (soundMuted) {
-    /* Muted state */
     btn.className = 'mute-btn muted';
     btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i><span class="mute-badge">OFF</span>';
     btn.title = 'Sound is OFF - Click to enable';
-
     bar.className = 'sound-bar off';
     barIcon.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
     barText.textContent = 'Sound Muted';
     bar.querySelector('.sound-bar-sub').textContent = 'Web bell will NOT ring (visual alerts still active)';
-
     toggle.innerHTML = '<i class="fa-solid fa-volume-high"></i> Enable Sound';
   } else {
-    /* Unmuted state */
     btn.className = 'mute-btn unmuted';
     btn.innerHTML = '<i class="fa-solid fa-volume-high"></i><span class="mute-badge">OFF</span>';
     btn.title = 'Sound is ON - Click to mute';
-
     bar.className = 'sound-bar on';
     barIcon.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
     barText.textContent = 'Sound Enabled';
     bar.querySelector('.sound-bar-sub').textContent = 'Web bell will ring when scheduled time arrives';
-
     toggle.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Mute Sound';
   }
 }
 
 /* ================================================================
-   AUDIO ENGINE - Respects mute state
+   AUDIO ENGINE
    ================================================================ */
 function getAudioCtx() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -908,16 +913,10 @@ function getAudioCtx() {
 }
 
 function playBell(duration) {
-  /* If sound is muted, do NOT play audio - but still show visual effects */
-  if (soundMuted) {
-    triggerRingFx(duration);
-    return;
-  }
-
+  if (soundMuted) { triggerRingFx(duration); return; }
   const ctx = getAudioCtx();
   const now = ctx.currentTime;
   const dur = Math.min(Math.max(duration, 0.5), 10);
-
   const partials = [
     { freq: 523.25, gain: 0.30, delay: 0 },
     { freq: 1046.5, gain: 0.15, delay: 0.02 },
@@ -926,7 +925,6 @@ function playBell(duration) {
     { freq: 2637,   gain: 0.015, delay: 0.08 },
     { freq: 3155.5, gain: 0.008, delay: 0.10 }
   ];
-
   partials.forEach(p => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -940,16 +938,11 @@ function playBell(duration) {
     osc.start(now + p.delay);
     osc.stop(now + p.delay + dur + 0.05);
   });
-
   triggerRingFx(dur);
 }
 
 function playTestBell() {
-  if (soundMuted) {
-    toast("Sound is muted! Enable sound first to test.", "er");
-    addLog("Test bell blocked - sound muted", "ring");
-    return;
-  }
+  if (soundMuted) { toast("Sound is muted! Enable sound first to test.", "er"); addLog("Test bell blocked - sound muted", "ring"); return; }
   playBell(2);
   addLog("Test bell played", "ring");
   toast("Test bell ringing!", "ok");
@@ -958,10 +951,7 @@ function playTestBell() {
 function triggerRingFx(dur) {
   isCurrentlyRinging = true;
   $('ringFx').classList.add('on');
-  setTimeout(() => {
-    $('ringFx').classList.remove('on');
-    isCurrentlyRinging = false;
-  }, dur * 1000);
+  setTimeout(() => { $('ringFx').classList.remove('on'); isCurrentlyRinging = false; }, dur * 1000);
 }
 
 /* ================================================================
@@ -1064,7 +1054,7 @@ function handleLogin(e) {
 function handleLogout() {
   currentUser = null;
   localStorage.removeItem('uw-user');
-  if (scheduleListener) { db.ref('schedule').off('value', scheduleListener); scheduleListener = null; }
+  if (scheduleListener) { db.ref(FB_ROOT).off('value', scheduleListener); scheduleListener = null; }
   schedule = {}; rangSet.clear(); activityLog = [];
   $('dashPage').classList.remove('vis');
   $('loginPage').style.display = 'flex';
@@ -1084,12 +1074,17 @@ function showDashboard() {
 
 /* ================================================================
    FIREBASE SCHEDULE LISTENER
+   Listens on BellScheduler node - matches your JSON structure
    ================================================================ */
 function initScheduleListener() {
-  if (scheduleListener) db.ref('schedule').off('value', scheduleListener);
-  scheduleListener = db.ref('schedule').on('value', snap => {
-    schedule = snap.val() || {};
-    DAYS.forEach(d => { if (!schedule[d]) schedule[d] = {}; });
+  if (scheduleListener) db.ref(FB_ROOT).off('value', scheduleListener);
+  scheduleListener = db.ref(FB_ROOT).on('value', snap => {
+    const raw = snap.val() || {};
+    /* Normalize all days into arrays */
+    schedule = {};
+    DAYS.forEach(d => {
+      schedule[d] = normalizeDayArray(raw[d]);
+    });
     renderAll();
   }, err => {
     console.error("Firebase read error:", err);
@@ -1099,35 +1094,48 @@ function initScheduleListener() {
 
 /* ================================================================
    FIREBASE WRITE OPERATIONS
+   All paths use BellScheduler/ instead of schedule/
    ================================================================ */
-function saveBellToFirebase(day, slot, bellData) {
-  return db.ref(`schedule/${day}/${slot}`).set(bellData)
-    .then(() => { addLog(`Bell saved: ${day} Slot ${slot} at ${bellData.time}`, "add"); toast(`Bell scheduled for ${to12h(bellData.time)}`, "ok"); })
+
+/* Save/update a bell at a specific array index */
+function saveBellToFirebase(day, index, bellData) {
+  return db.ref(`${FB_ROOT}/${day}/${index}`).set(bellData)
+    .then(() => { addLog(`Bell saved: ${day} #${index} at ${bellData.time}`, "add"); toast(`Bell scheduled for ${to12h(bellData.time)}`, "ok"); })
     .catch(err => { console.error("Save error:", err); toast("Failed to save bell", "er"); });
 }
 
-function deleteBellFromFirebase(day, slot) {
-  return db.ref(`schedule/${day}/${slot}`).remove()
-    .then(() => { addLog(`Bell deleted: ${day} Slot ${slot}`, "del"); toast("Bell removed", "ok"); })
+/* Delete a bell at a specific array index */
+function deleteBellFromFirebase(day, index) {
+  return db.ref(`${FB_ROOT}/${day}/${index}`).remove()
+    .then(() => { addLog(`Bell deleted: ${day} #${index}`, "del"); toast("Bell removed", "ok"); })
     .catch(err => { console.error("Delete error:", err); toast("Failed to delete bell", "er"); });
 }
 
+/* Delete all bells for a day */
 function deleteAllBellsForDay(day) {
-  return db.ref(`schedule/${day}`).remove()
+  return db.ref(`${FB_ROOT}/${day}`).remove()
     .then(() => { addLog(`All bells deleted for ${day}`, "del"); toast(`All bells cleared for ${day}`, "ok"); })
     .catch(err => { console.error("Delete all error:", err); toast("Failed to delete bells", "er"); });
 }
 
+/* Delete all bells across all days */
 function deleteAllBellsAllDays() {
-  return db.ref('schedule').remove()
+  return db.ref(FB_ROOT).remove()
     .then(() => { addLog("All bells deleted (all days)", "del"); toast("All bells cleared across all days", "ok"); })
     .catch(err => { console.error("Delete all error:", err); toast("Failed to delete all bells", "er"); });
 }
 
+/* Copy schedule from one day to another */
 function copyDaySchedule(fromDay, toDay) {
-  const sourceData = schedule[fromDay] || {};
-  const clone = JSON.parse(JSON.stringify(sourceData));
-  return db.ref(`schedule/${toDay}`).set(clone)
+  const sourceArr = normalizeDayArray(schedule[fromDay]);
+  /* Build a clean array with only valid bells, compacted (no gaps) */
+  const cleanArr = [];
+  sourceArr.forEach(b => {
+    if (b && b.time && b.duration > 0) {
+      cleanArr.push({ time: b.time, duration: b.duration, label: b.label || "" });
+    }
+  });
+  return db.ref(`${FB_ROOT}/${toDay}`).set(cleanArr)
     .then(() => { addLog(`Schedule copied: ${fromDay} → ${toDay}`, "edit"); toast(`${fromDay} schedule copied to ${toDay}`, "ok"); })
     .catch(err => { console.error("Copy error:", err); toast("Failed to copy schedule", "er"); });
 }
@@ -1151,13 +1159,13 @@ function renderDayTabs() {
     const bells = getActiveBells(d);
     const hasBells = bells.length > 0;
     const isToday = d === today;
-    return `<button class="dt${isOn ? ' on' : ''}" data-day="${d}" onclick="selectDay('${d}')">${DAY_SHORT[i]}${isToday ? '<br><span style="font-size:.55rem;opacity:.7">Today</span>' : ''}${hasBells ? '<span class="td"></span>' : ''}</button>`;
+    return `<button class="dt${isOn ? ' on' : ''}" onclick="selectDay('${d}')">${DAY_SHORT[i]}${isToday ? '<br><span style="font-size:.55rem;opacity:.7">Today</span>' : ''}${hasBells ? '<span class="td"></span>' : ''}</button>`;
   }).join('');
 }
 
 function selectDay(day) {
   selectedDay = day;
-  lastRenderedBellHash = ""; // Force re-render on day change
+  lastRenderedBellHash = "";
   renderAll();
 }
 
@@ -1168,15 +1176,14 @@ function renderBellList() {
   const today = todayName();
   const isToday = selectedDay === today;
 
-  /* Build a hash to detect if data actually changed - prevents unnecessary re-renders */
-  const bellHash = selectedDay + '|' + bells.map(b => `${b.slot}:${b.time24}:${b.duration}`).join(',') + '|' + now.substring(0,4) + '|' + [...rangSet].sort().join(',');
-  if (bellHash === lastRenderedBellHash) return; // Skip re-render if nothing changed
+  const bellHash = selectedDay + '|' + bells.map(b => `${b.index}:${b.time24}:${b.duration}`).join(',') + '|' + now.substring(0,4) + '|' + [...rangSet].sort().join(',');
+  if (bellHash === lastRenderedBellHash) return;
   lastRenderedBellHash = bellHash;
 
   let html = '';
   const emptySlot = findEmptySlot(selectedDay);
-  if (emptySlot > 0) {
-    html += `<div class="add-c" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add Bell (Slot ${emptySlot})</div>`;
+  if (emptySlot >= 0) {
+    html += `<div class="add-c" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add Bell</div>`;
   } else {
     html += `<div style="padding:8px;text-align:center;font-size:.78rem;color:var(--muted);opacity:.6">All ${MAX_SLOTS} slots are full</div>`;
   }
@@ -1187,7 +1194,7 @@ function renderBellList() {
     bells.forEach((b, idx) => {
       const t12 = to12h(b.time);
       const isPast = isToday && b.time24 < now;
-      const isRinging = rangSet.has(`${selectedDay}-${b.slot}-${b.time24}`);
+      const isRinging = rangSet.has(`${selectedDay}-${b.index}-${b.time24}`);
       let statusClass = isPast ? 'ps' : (isRinging ? 'now' : 'up');
       let statusText = isPast ? 'Passed' : (isRinging ? 'Ringing' : 'Upcoming');
       const ringingClass = isRinging ? ' ringing' : '';
@@ -1195,12 +1202,12 @@ function renderBellList() {
       html += `<div class="bi${ringingClass}">
         <div class="bi-n">${idx + 1}</div>
         <div class="bi-t">${t12}</div>
-        <div class="bi-d">${b.label ? '<strong>' + escapeHtml(b.label) + '</strong>' : 'Bell ' + b.slot} &middot; ${b.duration}s</div>
+        <div class="bi-d">${b.label ? '<strong>' + escapeHtml(b.label) + '</strong>' : 'Bell ' + (idx+1)} &middot; ${b.duration}s</div>
         <span class="bi-s ${statusClass}">${statusText}</span>
         <div class="bi-a">
           <button class="bi-b pv" onclick="handlePreviewBell(${b.duration})" title="Preview"><i class="fa-solid fa-play"></i></button>
-          <button class="bi-b ed" onclick="openEditModal('${selectedDay}',${b.slot})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-          <button class="bi-b dl" onclick="handleDeleteBell('${selectedDay}',${b.slot})" title="Delete"><i class="fa-solid fa-trash"></i></button>
+          <button class="bi-b ed" onclick="openEditModal('${selectedDay}',${b.index})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+          <button class="bi-b dl" onclick="handleDeleteBell('${selectedDay}',${b.index})" title="Delete"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>`;
     });
@@ -1211,10 +1218,7 @@ function renderBellList() {
 }
 
 function handlePreviewBell(duration) {
-  if (soundMuted) {
-    toast("Sound is muted! Enable sound to preview.", "er");
-    return;
-  }
+  if (soundMuted) { toast("Sound is muted! Enable sound to preview.", "er"); return; }
   playBell(duration);
   addLog("Bell preview played", "ring");
 }
@@ -1286,33 +1290,35 @@ function renderTimeline() {
 }
 
 /* ================================================================
-   BELL MODAL
+   BELL MODAL (ADD / EDIT)
+   Uses array index instead of slot number
    ================================================================ */
 function openAddModal() {
-  const slot = findEmptySlot(selectedDay);
-  if (slot < 0) { toast("All slots are full for this day", "er"); return; }
+  const idx = findEmptySlot(selectedDay);
+  if (idx < 0) { toast("All slots are full for this day", "er"); return; }
   $('mTitle').textContent = 'Add Bell';
   $('mTime').value = '';
   $('mLabel').value = '';
-  $('mSlider').value = 3;
-  $('slVal').textContent = '3';
+  $('mSlider').value = 5;
+  $('slVal').textContent = '5';
   $('mDay').value = selectedDay;
-  $('mSlot').value = slot;
+  $('mIndex').value = idx;
   $('mEdit').value = '0';
   $('bellModal').classList.add('open');
   setTimeout(() => $('mTime').focus(), 100);
 }
 
-function openEditModal(day, slot) {
-  const bellData = schedule[day] && schedule[day][slot];
+function openEditModal(day, index) {
+  const dayArr = normalizeDayArray(schedule[day]);
+  const bellData = dayArr[index];
   if (!bellData) { toast("Bell data not found", "er"); return; }
   $('mTitle').textContent = 'Edit Bell';
   $('mTime').value = to24h(bellData.time);
   $('mLabel').value = bellData.label || '';
-  $('mSlider').value = bellData.duration || 3;
-  $('slVal').textContent = bellData.duration || 3;
+  $('mSlider').value = bellData.duration || 5;
+  $('slVal').textContent = bellData.duration || 5;
   $('mDay').value = day;
-  $('mSlot').value = slot;
+  $('mIndex').value = index;
   $('mEdit').value = '1';
   $('bellModal').classList.add('open');
   setTimeout(() => $('mTime').focus(), 100);
@@ -1324,18 +1330,22 @@ function handleBellFormSubmit(e) {
   e.preventDefault();
   const time = $('mTime').value;
   const label = $('mLabel').value.trim();
-  const duration = parseInt($('mSlider').value) || 3;
+  const duration = parseInt($('mSlider').value) || 5;
   const day = $('mDay').value;
-  const slot = parseInt($('mSlot').value);
+  const index = parseInt($('mIndex').value);
   if (!time) { toast("Please select a bell time", "er"); return; }
   const time12 = to12h(time);
-  saveBellToFirebase(day, slot, { time: time12, duration: duration, label: label }).then(() => closeBellModal());
+  /* Build bell object matching your JSON format */
+  const bellData = { time: time12, duration: duration };
+  if (label) bellData.label = label;
+  saveBellToFirebase(day, index, bellData).then(() => closeBellModal());
 }
 
-function handleDeleteBell(day, slot) {
-  const bellData = schedule[day] && schedule[day][slot];
+function handleDeleteBell(day, index) {
+  const dayArr = normalizeDayArray(schedule[day]);
+  const bellData = dayArr[index];
   const timeStr = bellData ? to12h(bellData.time) : 'this bell';
-  showConfirm(`Delete bell at ${timeStr} from ${day}?`).then(ok => { if (ok) deleteBellFromFirebase(day, slot); });
+  showConfirm(`Delete bell at ${timeStr} from ${day}?`).then(ok => { if (ok) deleteBellFromFirebase(day, index); });
 }
 
 /* ================================================================
@@ -1385,13 +1395,11 @@ function checkBells() {
   const now = now24();
   const bells = getActiveBells(today);
   bells.forEach(b => {
-    const key = `${today}-${b.slot}-${b.time24}`;
+    const key = `${today}-${b.index}-${b.time24}`;
     if (b.time24 === now && !rangSet.has(key)) {
       rangSet.add(key);
-      /* Always show visual effects */
       triggerRingFx(b.duration);
-      addLog(`Bell time: ${to12h(b.time)} (${b.label || 'Bell ' + b.slot})${soundMuted ? ' [MUTED]' : ''}`, "ring");
-
+      addLog(`Bell time: ${to12h(b.time)} (${b.label || 'Bell'})${soundMuted ? ' [MUTED]' : ''}`, "ring");
       if (soundMuted) {
         toast(`Bell time: ${to12h(b.time)} (Sound muted)`, "in");
       } else {
@@ -1411,8 +1419,6 @@ function tick() {
   renderWelcome();
   renderTimeline();
   checkBells();
-  /* Only re-render bell list every tick to update status badges */
-  /* The hash check inside renderBellList prevents DOM thrashing */
   renderBellList();
 }
 
